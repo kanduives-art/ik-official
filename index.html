@@ -36,8 +36,10 @@
             line-height: 1.6;
         }
 
-        /* OVERLAY DÉMARRAGE */
-        .start-overlay {
+        /* ============================================
+           ANIMATION INTERGALACTIQUE - DÉMARRAGE
+           ============================================ */
+        .space-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -50,29 +52,121 @@
             align-items: center;
             justify-content: center;
             gap: 40px;
-            transition: opacity 0.8s ease, visibility 0.8s;
+            overflow: hidden;
         }
 
-        .start-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
+        /* Étoiles animées */
+        .stars-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             pointer-events: none;
         }
 
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        .star.animating {
+            animation: starWarp 2s ease-out forwards;
+        }
+
+        @keyframes starWarp {
+            0% {
+                opacity: 0;
+                transform: scale(0) translateZ(0);
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(3) translateZ(1000px);
+            }
+        }
+
+        /* Effet de vitesse (lignes de lumière) */
+        .speed-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .speed-lines.active {
+            opacity: 1;
+        }
+
+        .speed-line {
+            position: absolute;
+            width: 2px;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+            opacity: 0;
+        }
+
+        .speed-line.active {
+            animation: speedLine 1s ease-out forwards;
+        }
+
+        @keyframes speedLine {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scaleY(0.5);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) scaleY(2);
+            }
+        }
+
+        /* Logo IK avec effet zoom */
         .start-logo {
             font-family: 'Oswald', sans-serif;
             font-size: 8rem;
             font-weight: 700;
             letter-spacing: 20px;
-            animation: pulse 2s infinite;
             text-shadow: 0 0 60px rgba(255,51,51,0.5);
+            z-index: 10;
+            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
+        .start-logo.zooming {
+            animation: logoZoom 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
+        @keyframes logoZoom {
+            0% {
+                transform: scale(1);
+                text-shadow: 0 0 60px rgba(255,51,51,0.5);
+            }
+            50% {
+                transform: scale(1.5);
+                text-shadow: 0 0 150px rgba(255,51,51,0.8), 0 0 300px rgba(255,51,51,0.4);
+            }
+            100% {
+                transform: scale(50);
+                opacity: 0;
+                text-shadow: 0 0 500px rgba(255,51,51,1);
+            }
+        }
+
+        /* Bouton Entrer */
         .start-btn {
             padding: 25px 80px;
             background: transparent;
@@ -86,6 +180,7 @@
             transition: var(--transition);
             position: relative;
             overflow: hidden;
+            z-index: 10;
         }
 
         .start-btn::before {
@@ -110,7 +205,194 @@
             box-shadow: 0 0 40px rgba(255,51,51,0.6);
         }
 
-        /* NAVIGATION */
+        .start-btn.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.8);
+        }
+
+        /* Transition de sortie */
+        .space-overlay.exiting {
+            animation: spaceExit 1s ease-out forwards;
+        }
+
+        @keyframes spaceExit {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        /* ============================================
+           EFFETS DE PARTICULES (CLIC/TOUCH)
+           ============================================ */
+        .particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+        }
+
+        .particle.spark {
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+        }
+
+        .particle.smoke {
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(255,255,255,0.3), transparent);
+            filter: blur(5px);
+        }
+
+        @keyframes particleExplode {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes smokeRise {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(3);
+                opacity: 0;
+            }
+        }
+
+        /* ============================================
+           SÉLECTEUR DE LANGUE
+           ============================================ */
+        .language-selector {
+            position: fixed;
+            top: 25px;
+            right: 60px;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--gray);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--light);
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--light);
+        }
+
+        .lang-dropdown {
+            position: relative;
+        }
+
+        .lang-toggle {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--light);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lang-toggle:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--primary);
+        }
+
+        .lang-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: rgba(10,10,10,0.98);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 10px;
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            backdrop-filter: blur(20px);
+        }
+
+        .lang-dropdown:hover .lang-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .lang-option {
+            padding: 12px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .lang-option:hover {
+            background: rgba(255,51,51,0.2);
+        }
+
+        .lang-option.active {
+            background: var(--primary);
+        }
+
+        .lang-flag {
+            font-size: 1.2rem;
+        }
+
+        /* ============================================
+           NAVIGATION
+           ============================================ */
         nav {
             position: fixed;
             top: 0;
@@ -197,7 +479,9 @@
             color: var(--primary);
         }
 
-        /* HERO SECTION - FULL SCREEN */
+        /* ============================================
+           HERO SECTION
+           ============================================ */
         .hero {
             position: relative;
             height: 100vh;
@@ -308,7 +592,9 @@
             50% { transform: translateX(-50%) translateY(15px); }
         }
 
-        /* SECTIONS GÉNÉRALES */
+        /* ============================================
+           SECTIONS GÉNÉRALES
+           ============================================ */
         section {
             position: relative;
             overflow: hidden;
@@ -349,7 +635,9 @@
             background: var(--primary);
         }
 
-        /* RÉSEAUX SOCIAUX FIXES */
+        /* ============================================
+           RÉSEAUX SOCIAUX FIXES (MOITIÉ TAILLE)
+           ============================================ */
         .socials-fixed {
             position: fixed;
             right: 40px;
@@ -357,13 +645,13 @@
             transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
             z-index: 999;
         }
 
         .social-link {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.2);
@@ -371,7 +659,7 @@
             align-items: center;
             justify-content: center;
             color: var(--light);
-            font-size: 1.2rem;
+            font-size: 1rem;
             text-decoration: none;
             transition: var(--transition);
             backdrop-filter: blur(10px);
@@ -384,7 +672,143 @@
             box-shadow: 0 0 30px rgba(255,51,51,0.4);
         }
 
-        /* SECTION MUSIQUE - PLATEFORMES */
+        /* ============================================
+           SECTION RÉSEAUX SOCIAUX (CARDS)
+           ============================================ */
+        .social-section {
+            min-height: 60vh;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            display: flex;
+            align-items: center;
+            padding: 120px 60px;
+            position: relative;
+        }
+
+        .social-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('noise.png') repeat;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .social-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .social-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .social-platforms {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .social-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: var(--transition);
+            text-decoration: none;
+            color: var(--light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(255,51,51,0.1));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .social-card:hover::before {
+            opacity: 1;
+        }
+
+        .social-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--primary);
+            box-shadow: 0 30px 60px rgba(255,51,51,0.2);
+        }
+
+        .social-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: block;
+            transition: transform 0.4s;
+        }
+
+        .social-card:hover .social-card-icon {
+            transform: scale(1.2);
+        }
+
+        .social-card-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .social-card-action {
+            font-size: 0.85rem;
+            color: var(--gray);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .social-card:hover .social-card-action {
+            color: var(--primary);
+        }
+
+        /* Couleurs spécifiques */
+        .social-card.instagram:hover {
+            border-color: #E4405F;
+            box-shadow: 0 30px 60px rgba(228,64,95,0.2);
+        }
+        .social-card.instagram .social-card-icon {
+            color: #E4405F;
+        }
+
+        .social-card.tiktok:hover {
+            border-color: #00f2ea;
+            box-shadow: 0 30px 60px rgba(0,242,234,0.2);
+        }
+        .social-card.tiktok .social-card-icon {
+            color: #00f2ea;
+        }
+
+        .social-card.facebook:hover {
+            border-color: #1877F2;
+            box-shadow: 0 30px 60px rgba(24,119,242,0.2);
+        }
+        .social-card.facebook .social-card-icon {
+            color: #1877F2;
+        }
+
+        /* ============================================
+           SECTION MUSIQUE - PLATEFORMES
+           ============================================ */
         .music-section {
             min-height: 100vh;
             background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
@@ -491,7 +915,9 @@
             color: var(--primary);
         }
 
-        /* SECTION ALBUM TIME - INDÉPENDANTE */
+        /* ============================================
+           SECTION ALBUM TIME
+           ============================================ */
         .album-section {
             min-height: 100vh;
             background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
@@ -681,7 +1107,9 @@
             transform: translateY(-3px);
         }
 
-        /* SECTION SINGLE - MISE EN PAGE DRAMATIQUE */
+        /* ============================================
+           SECTION SINGLE FRAPPE
+           ============================================ */
         .single-section {
             min-height: 100vh;
             background: var(--darker);
@@ -849,7 +1277,9 @@
             text-transform: uppercase;
         }
 
-        /* SECTION GALERIE - GRID ÉLÉGANT */
+        /* ============================================
+           SECTION GALERIE
+           ============================================ */
         .gallery-section {
             background: linear-gradient(to bottom, #0a0a0a, #111);
             padding: 120px 60px;
@@ -939,7 +1369,9 @@
             transform: translateY(0);
         }
 
-        /* SECTION VIDÉOS */
+        /* ============================================
+           SECTION VIDÉOS
+           ============================================ */
         .videos-section {
             background: var(--darker);
             padding: 120px 60px;
@@ -1039,7 +1471,9 @@
             gap: 20px;
         }
 
-        /* SECTION BIO */
+        /* ============================================
+           SECTION BIO
+           ============================================ */
         .bio-section {
             background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
             padding: 120px 60px;
@@ -1140,7 +1574,9 @@
             transform: translateY(-3px);
         }
 
-        /* SECTION TOURNÉE */
+        /* ============================================
+           SECTION TOURNÉE
+           ============================================ */
         .tour-section {
             background: var(--darker);
             padding: 120px 60px;
@@ -1162,6 +1598,11 @@
             margin-bottom: 30px;
             opacity: 0.5;
             animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
         }
 
         .tour-text {
@@ -1196,7 +1637,9 @@
             color: var(--light);
         }
 
-        /* NEWSLETTER SECTION */
+        /* ============================================
+           NEWSLETTER SECTION
+           ============================================ */
         .newsletter-section {
             background: linear-gradient(to bottom, var(--darker), #000);
             padding: 150px 60px;
@@ -1282,7 +1725,9 @@
             font-size: 0.9rem;
         }
 
-        /* FOOTER */
+        /* ============================================
+           FOOTER
+           ============================================ */
         footer {
             background: #000;
             padding: 80px 60px 40px;
@@ -1366,7 +1811,84 @@
             color: var(--primary);
         }
 
-        /* LIGHTBOX AMÉLIORÉ */
+        /* ============================================
+           CONTACT MANAGER
+           ============================================ */
+        .manager-contact {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .manager-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .manager-toggle:hover {
+            color: var(--light);
+        }
+
+        .manager-toggle i {
+            transition: transform 0.3s;
+        }
+
+        .manager-toggle.active i {
+            transform: rotate(180deg);
+        }
+
+        .manager-info {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s;
+        }
+
+        .manager-info.active {
+            max-height: 200px;
+            padding-top: 20px;
+        }
+
+        .manager-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .manager-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .manager-item i {
+            color: var(--primary);
+            width: 20px;
+        }
+
+        .manager-item a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .manager-item a:hover {
+            color: var(--primary);
+        }
+
+        /* ============================================
+           LIGHTBOX
+           ============================================ */
         .lightbox-premium {
             position: fixed;
             inset: 0;
@@ -1421,7 +1943,9 @@
             transform: rotate(90deg);
         }
 
-        /* ANIMATIONS SCROLL */
+        /* ============================================
+           ANIMATIONS SCROLL
+           ============================================ */
         .reveal {
             opacity: 0;
             transform: translateY(50px);
@@ -1433,8 +1957,20 @@
             transform: translateY(0);
         }
 
-        /* RESPONSIVE */
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
         @media (max-width: 1200px) {
+            .language-selector {
+                right: 30px;
+                top: 80px;
+            }
+
+            .social-platforms {
+                grid-template-columns: 1fr;
+                max-width: 350px;
+            }
+
             .music-platforms {
                 grid-template-columns: 1fr;
                 max-width: 400px;
@@ -1506,11 +2042,22 @@
             .nav-links {
                 display: none;
             }
+
+            .language-selector {
+                right: 20px;
+                top: 75px;
+            }
+
+            .lang-toggle {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
             
             .socials-fixed {
                 display: none;
             }
             
+            .social-section,
             .music-section,
             .album-section,
             .single-section,
@@ -1543,6 +2090,10 @@
                 grid-template-columns: 1fr;
                 text-align: center;
             }
+
+            .manager-contact {
+                text-align: left;
+            }
             
             .footer-tagline {
                 max-width: 100%;
@@ -1557,94 +2108,164 @@
             .hero-title {
                 letter-spacing: 10px;
             }
+
+            .start-logo {
+                font-size: 5rem;
+                letter-spacing: 10px;
+            }
+
+            .start-btn {
+                padding: 20px 50px;
+                font-size: 1rem;
+                letter-spacing: 5px;
+            }
         }
     </style>
+<base target="_blank">
 </head>
 <body>
 
-    <!-- AUDIO -->
-    <audio id="welcomeJingle">
-        <source src="jingle.mp3" type="audio/mpeg">
-    </audio>
+    <!-- ============================================
+         CONTENEUR DE PARTICULES
+         ============================================ -->
+    <div class="particle-container" id="particleContainer"></div>
 
-    <!-- OVERLAY DÉMARRAGE -->
-    <div class="start-overlay" id="startOverlay">
-        <div class="start-logo">IK</div>
-        <button class="start-btn" onclick="startExperience()">Entrer dans l'univers</button>
+    <!-- ============================================
+         ANIMATION INTERGALACTIQUE - DÉMARRAGE
+         ============================================ -->
+    <div class="space-overlay" id="spaceOverlay">
+        <div class="stars-container" id="starsContainer"></div>
+        <div class="speed-lines" id="speedLines"></div>
+        <div class="start-logo" id="startLogo">IK</div>
+        <button class="start-btn" id="startBtn" onclick="startSpaceJourney()" data-i18n="enter">Entrer dans l'univers</button>
     </div>
 
-    <!-- NAVIGATION -->
+    <!-- ============================================
+         SÉLECTEUR DE LANGUE
+         ============================================ -->
+    <div class="language-selector">
+        <div class="lang-dropdown">
+            <button class="lang-toggle" id="langToggle">
+                <span class="lang-flag" id="currentFlag">🇫🇷</span>
+                <span id="currentLang">FR</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="lang-menu">
+                <div class="lang-option active" onclick="changeLanguage('fr')">
+                    <span class="lang-flag">🇫🇷</span>
+                    <span>Français</span>
+                </div>
+                <div class="lang-option" onclick="changeLanguage('en')">
+                    <span class="lang-flag">🇬🇧</span>
+                    <span>English</span>
+                </div>
+                <div class="lang-option" onclick="changeLanguage('it')">
+                    <span class="lang-flag">🇮🇹</span>
+                    <span>Italiano</span>
+                </div>
+                <div class="lang-option" onclick="changeLanguage('de')">
+                    <span class="lang-flag">🇩🇪</span>
+                    <span>Deutsch</span>
+                </div>
+                <div class="lang-option" onclick="changeLanguage('pt')">
+                    <span class="lang-flag">🇵🇹</span>
+                    <span>Português</span>
+                </div>
+                <div class="lang-option" onclick="changeLanguage('es')">
+                    <span class="lang-flag">🇪🇸</span>
+                    <span>Español</span>
+                </div>
+                <div class="lang-option" onclick="changeLanguage('ln')">
+                    <span class="lang-flag">🇨🇩</span>
+                    <span>Lingala</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         NAVIGATION
+         ============================================ -->
     <nav id="navbar">
         <a href="#" class="logo">IK</a>
         <ul class="nav-links">
-            <li><a href="#music">Musique</a></li>
-            <li><a href="#album">Album</a></li>
-            <li><a href="#single">Single</a></li>
-            <li><a href="#gallery">Galerie</a></li>
-            <li><a href="#videos">Vidéos</a></li>
-            <li><a href="#bio">Bio</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#music" data-i18n="nav_music">Musique</a></li>
+            <li><a href="#album" data-i18n="nav_album">Album</a></li>
+            <li><a href="#single" data-i18n="nav_single">Single</a></li>
+            <li><a href="#social" data-i18n="nav_social">Réseaux</a></li>
+            <li><a href="#gallery" data-i18n="nav_gallery">Galerie</a></li>
+            <li><a href="#videos" data-i18n="nav_videos">Vidéos</a></li>
+            <li><a href="#bio" data-i18n="nav_bio">Bio</a></li>
+            <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
         </ul>
     </nav>
 
-    <!-- RÉSEAUX SOCIAUX -->
+    <!-- ============================================
+         RÉSEAUX SOCIAUX FIXES (MOITIÉ TAILLE)
+         ============================================ -->
     <div class="socials-fixed">
-        <a href="https://www.instagram.com/ik_ivk" class="social-link" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/@ik_ivk" class="social-link" target="_blank"><i class="fab fa-tiktok"></i></a>
-        <a href="https://open.spotify.com/intl-fr/artist/2kmNQg4mFn7bwFFYLn4A1W" class="social-link" target="_blank"><i class="fab fa-spotify"></i></a>
-        <a href="https://music.apple.com/ch/artist/ik/1643363794" class="social-link" target="_blank"><i class="fab fa-apple"></i></a>
-        <a href="https://on.soundcloud.com/svhi5POoamp8Ps9bJZ" class="social-link" target="_blank"><i class="fab fa-soundcloud"></i></a>
-        <a href="#" class="social-link" target="_blank"><i class="fab fa-youtube"></i></a>
+        <a href="https://www.instagram.com/ik_ivk" class="social-link" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@ik_ivk" class="social-link" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+        <a href="https://open.spotify.com/intl-fr/artist/2kmNQg4mFn7bwFFYLn4A1W" class="social-link" target="_blank" title="Spotify"><i class="fab fa-spotify"></i></a>
+        <a href="https://music.apple.com/ch/artist/ik/1643363794" class="social-link" target="_blank" title="Apple Music"><i class="fab fa-apple"></i></a>
+        <a href="https://on.soundcloud.com/svhi5POoamp8Ps9bJZ" class="social-link" target="_blank" title="SoundCloud"><i class="fab fa-soundcloud"></i></a>
+        <a href="#" class="social-link" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
     </div>
 
-    <!-- HERO -->
+    <!-- ============================================
+         HERO
+         ============================================ -->
     <section class="hero">
         <div class="hero-bg"></div>
         <div class="hero-overlay"></div>
         
         <div class="hero-content">
-            <div class="hero-label">Nouveau Single</div>
+            <div class="hero-label" data-i18n="hero_label">Nouveau Single</div>
             <h1 class="hero-title">FRAPPE</h1>
-            <p class="hero-subtitle">Disponible sur toutes les plateformes</p>
+            <p class="hero-subtitle" data-i18n="hero_subtitle">Disponible sur toutes les plateformes</p>
         </div>
 
         <div class="scroll-indicator" onclick="document.getElementById('music').scrollIntoView({behavior: 'smooth'})">
-            <span>Découvrir</span>
+            <span data-i18n="discover">Découvrir</span>
             <i class="fas fa-chevron-down"></i>
         </div>
     </section>
 
-    <!-- SECTION MUSIQUE - PLATEFORMES STREAMING -->
+    <!-- ============================================
+         SECTION MUSIQUE - PLATEFORMES STREAMING
+         ============================================ -->
     <section class="music-section" id="music">
         <div class="music-container">
             <div class="music-header reveal">
-                <div class="section-label">Streaming</div>
-                <h2 class="section-title">Musique</h2>
+                <div class="section-label" data-i18n="streaming">Streaming</div>
+                <h2 class="section-title" data-i18n="music">Musique</h2>
             </div>
             
             <div class="music-platforms">
                 <a href="https://open.spotify.com/intl-fr/artist/2kmNQg4mFn7bwFFYLn4A1W" class="platform-card reveal" target="_blank">
                     <i class="fab fa-spotify platform-icon" style="color: #1DB954;"></i>
                     <h3 class="platform-name">Spotify</h3>
-                    <p class="platform-action">Écouter maintenant</p>
+                    <p class="platform-action" data-i18n="listen_now">Écouter maintenant</p>
                 </a>
                 
                 <a href="https://music.apple.com/ch/artist/ik/1643363794" class="platform-card reveal" target="_blank">
                     <i class="fab fa-apple platform-icon" style="color: #FA243C;"></i>
                     <h3 class="platform-name">Apple Music</h3>
-                    <p class="platform-action">Écouter maintenant</p>
+                    <p class="platform-action" data-i18n="listen_now">Écouter maintenant</p>
                 </a>
                 
                 <a href="https://on.soundcloud.com/svhi5POoamp8Ps9bJZ" class="platform-card reveal" target="_blank">
                     <i class="fab fa-soundcloud platform-icon" style="color: #FF5500;"></i>
                     <h3 class="platform-name">SoundCloud</h3>
-                    <p class="platform-action">Écouter maintenant</p>
+                    <p class="platform-action" data-i18n="listen_now">Écouter maintenant</p>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- SECTION ALBUM TIME - INDÉPENDANTE -->
+    <!-- ============================================
+         SECTION ALBUM TIME
+         ============================================ -->
     <section class="album-section" id="album">
         <div class="album-container">
             <div class="album-visual reveal">
@@ -1655,44 +2276,49 @@
             </div>
             
             <div class="album-content reveal">
-                <div class="album-badge">Album • 2024</div>
+                <div class="album-badge" data-i18n="album_badge">Album • 2024</div>
                 <h2 class="album-title-large">TIME</h2>
-                <div class="album-meta">10 titres • 45 minutes</div>
-                <p class="album-description">
+                <div class="album-meta" data-i18n="album_meta">10 titres • 45 minutes</div>
+                <p class="album-description" data-i18n="album_desc">
                     Un voyage musical à travers le temps et les émotions. TIME marque une évolution 
                     artistique majeure, mêlant influences africaines et sonorités européennes dans 
                     une production raffinée et contemporaine.
                 </p>
                 <div class="album-actions">
-                    <a href="https://open.spotify.com" class="btn-primary" target="_blank">
-                        <i class="fab fa-spotify"></i> Écouter sur Spotify
+                    <a href="https://open.spotify.com/intl-fr/album/1MNW3dNKnPKYt2o2qtdGu0?si=EBUGj0AcSbORr3uf6dQf-A" class="btn-primary" target="_blank">
+                        <i class="fab fa-spotify"></i> Spotify
                     </a>
-                    <a href="https://music.apple.com" class="btn-secondary" target="_blank">
+                    <a href="https://music.apple.com/ch/album/time/1783268150?l=fr-FR" class="btn-secondary" target="_blank">
                         <i class="fab fa-apple"></i> Apple Music
+                    </a>
+                    <a href="https://on.soundcloud.com/vzBpyxwpPdUJmlOtYL" class="btn-secondary" target="_blank">
+                        <i class="fab fa-soundcloud"></i> SoundCloud
                     </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECTION SINGLE FRAPPE - INDÉPENDANTE -->
+    <!-- ============================================
+         SECTION SINGLE FRAPPE
+         ============================================ -->
     <section class="single-section" id="single">
         <div class="single-container">
             <div class="single-content reveal">
-                <div class="single-badge">Nouveau Single</div>
+                <div class="single-badge" data-i18n="new_single">Nouveau Single</div>
                 <h2 class="single-title-large">FRAPPE</h2>
                 <div class="single-year">2026</div>
-                <p class="single-description">
+                <p class="single-description" data-i18n="single_desc">
                     Le nouveau single qui marque un tournant. Une production explosive 
                     qui révèle toute l'énergie et la passion d'IK. Disponible maintenant 
                     sur toutes les plateformes de streaming.
                 </p>
                 <div class="single-actions">
-                    <a href="https://open.spotify.com" class="btn-primary" target="_blank">
-                        <i class="fas fa-play"></i> Écouter
+                    <a href="https://open.spotify.com/intl-fr/artist/2kmNQg4mFn7bwFFYLn4A1W" class="btn-primary" target="_blank">
+                        <i class="fas fa-play"></i> <span data-i18n="listen">Écouter</span>
                     </a>
                     <a href="https://youtube.com" class="btn-secondary" target="_blank">
-                        <i class="fab fa-youtube"></i> Voir le clip
+                        <i class="fab fa-youtube"></i> <span data-i18n="watch_clip">Voir le clip</span>
                     </a>
                 </div>
             </div>
@@ -1707,71 +2333,107 @@
                             <div class="bar"></div>
                             <div class="bar"></div>
                         </div>
-                        <span class="playing-text">Maintenant disponible</span>
+                        <span class="playing-text" data-i18n="now_available">Maintenant disponible</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECTION GALERIE - GRID PREMIUM -->
+    <!-- ============================================
+         SECTION RÉSEAUX SOCIAUX (CARDS)
+         ============================================ -->
+    <section class="social-section" id="social">
+        <div class="social-container">
+            <div class="social-header reveal">
+                <div class="section-label" data-i18n="follow_me">Suivez-moi</div>
+                <h2 class="section-title" data-i18n="social_networks">Réseaux Sociaux</h2>
+            </div>
+            
+            <div class="social-platforms">
+                <a href="https://www.instagram.com/ik_ivk" class="social-card instagram reveal" target="_blank">
+                    <i class="fab fa-instagram social-card-icon"></i>
+                    <h3 class="social-card-name">Instagram</h3>
+                    <p class="social-card-action" data-i18n="follow">Suivre</p>
+                </a>
+                
+                <a href="https://www.tiktok.com/@ik_ivk" class="social-card tiktok reveal" target="_blank">
+                    <i class="fab fa-tiktok social-card-icon"></i>
+                    <h3 class="social-card-name">TikTok</h3>
+                    <p class="social-card-action" data-i18n="follow">Suivre</p>
+                </a>
+                
+                <a href="#" class="social-card facebook reveal" target="_blank">
+                    <i class="fab fa-facebook-f social-card-icon"></i>
+                    <h3 class="social-card-name">Facebook</h3>
+                    <p class="social-card-action" data-i18n="follow">Suivre</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION GALERIE
+         ============================================ -->
     <section class="gallery-section" id="gallery">
         <div class="gallery-header reveal">
-            <div class="section-label">Médias</div>
-            <h2 class="section-title">Galerie</h2>
+            <div class="section-label" data-i18n="media">Médias</div>
+            <h2 class="section-title" data-i18n="gallery">Galerie</h2>
         </div>
         
         <div class="gallery-grid-premium">
             <div class="gallery-item-premium reveal" onclick="openLightbox('photo1.jpg')">
                 <img src="photo1.jpg" alt="Concert Live" onerror="this.style.display='none'">
                 <div class="gallery-overlay-premium">
-                    <h3 class="gallery-title">Concert Live</h3>
+                    <h3 class="gallery-title" data-i18n="concert_live">Concert Live</h3>
                     <p class="gallery-date">Zurich, 2024</p>
                 </div>
             </div>
             <div class="gallery-item-premium reveal" onclick="openLightbox('photo2.jpg')">
                 <img src="photo2.jpg" alt="Studio Session" onerror="this.style.display='none'">
                 <div class="gallery-overlay-premium">
-                    <h3 class="gallery-title">Studio Session</h3>
+                    <h3 class="gallery-title" data-i18n="studio_session">Studio Session</h3>
                     <p class="gallery-date">Behind the Scenes</p>
                 </div>
             </div>
             <div class="gallery-item-premium reveal" onclick="openLightbox('photo3.jpg')">
                 <img src="photo3.jpg" alt="Portrait" onerror="this.style.display='none'">
                 <div class="gallery-overlay-premium">
-                    <h3 class="gallery-title">Portrait</h3>
+                    <h3 class="gallery-title" data-i18n="portrait">Portrait</h3>
                     <p class="gallery-date">2024</p>
                 </div>
             </div>
             <div class="gallery-item-premium reveal" onclick="openLightbox('photo4.jpg')">
                 <img src="photo4.jpg" alt="Festival" onerror="this.style.display='none'">
                 <div class="gallery-overlay-premium">
-                    <h3 class="gallery-title">Festival</h3>
+                    <h3 class="gallery-title" data-i18n="festival">Festival</h3>
                     <p class="gallery-date">Summer 2024</p>
                 </div>
             </div>
             <div class="gallery-item-premium reveal" onclick="openLightbox('photo5.jpg')">
                 <img src="photo5.jpg" alt="Backstage" onerror="this.style.display='none'">
                 <div class="gallery-overlay-premium">
-                    <h3 class="gallery-title">Backstage</h3>
+                    <h3 class="gallery-title" data-i18n="backstage">Backstage</h3>
                     <p class="gallery-date">Tour 2024</p>
                 </div>
             </div>
             <div class="gallery-item-premium reveal" onclick="openLightbox('photo6.jpg')">
                 <img src="photo6.jpg" alt="Shooting" onerror="this.style.display='none'">
                 <div class="gallery-overlay-premium">
-                    <h3 class="gallery-title">Shooting</h3>
+                    <h3 class="gallery-title" data-i18n="shooting">Shooting</h3>
                     <p class="gallery-date">New Single</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECTION VIDÉOS -->
+    <!-- ============================================
+         SECTION VIDÉOS
+         ============================================ -->
     <section class="videos-section" id="videos">
         <div class="section-header reveal">
-            <div class="section-label">Contenu</div>
-            <h2 class="section-title">Vidéos</h2>
+            <div class="section-label" data-i18n="content">Contenu</div>
+            <h2 class="section-title" data-i18n="videos">Vidéos</h2>
         </div>
         
         <div class="videos-grid">
@@ -1782,9 +2444,9 @@
                     <span class="video-duration">3:45</span>
                 </div>
                 <div class="video-info">
-                    <h3 class="video-title">FRAPPE - Clip Officiel</h3>
+                    <h3 class="video-title">FRAPPE - <span data-i18n="official_clip">Clip Officiel</span></h3>
                     <div class="video-meta">
-                        <span><i class="fas fa-play-circle"></i> 125K vues</span>
+                        <span><i class="fas fa-play-circle"></i> 125K <span data-i18n="views">vues</span></span>
                         <span>2026</span>
                     </div>
                 </div>
@@ -1799,7 +2461,7 @@
                 <div class="video-info">
                     <h3 class="video-title">Behind The Scenes - TIME</h3>
                     <div class="video-meta">
-                        <span><i class="fas fa-play-circle"></i> 45K vues</span>
+                        <span><i class="fas fa-play-circle"></i> 45K <span data-i18n="views">vues</span></span>
                         <span>2024</span>
                     </div>
                 </div>
@@ -1814,7 +2476,7 @@
                 <div class="video-info">
                     <h3 class="video-title">Freestyle Session Live</h3>
                     <div class="video-meta">
-                        <span><i class="fas fa-play-circle"></i> 89K vues</span>
+                        <span><i class="fas fa-play-circle"></i> 89K <span data-i18n="views">vues</span></span>
                         <span>2024</span>
                     </div>
                 </div>
@@ -1822,33 +2484,35 @@
         </div>
     </section>
 
-    <!-- SECTION BIO -->
+    <!-- ============================================
+         SECTION BIO
+         ============================================ -->
     <section class="bio-section" id="bio">
         <div class="bio-container">
             <div class="bio-portrait reveal">
-                <img src="bio-photo.jpg" alt="Ivan Kandu" onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:600px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);color:#666;font-size:1.2rem;text-align:center;padding:40px;\'>Ajoute ta photo ici<br>(bio-photo.jpg)</div>'">
+                <img src="bio-photo.jpg" alt="Ivan Kandu" onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:600px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);color:#666;font-size:1.2rem;text-align:center;padding:40px;\' data-i18n=\'add_photo\'>Ajoute ta photo ici<br>(bio-photo.jpg)</div>'">
             </div>
             
             <div class="bio-content reveal">
                 <h2>Ivan Kandu</h2>
-                <div class="bio-role">Artiste • Chanteur • Compositeur</div>
+                <div class="bio-role" data-i18n="bio_role">Artiste • Chanteur • Compositeur</div>
                 
-                <p class="bio-text">
+                <p class="bio-text" data-i18n="bio_text1">
                     Né le 12 janvier 1993 en République démocratique du Congo, <strong>Ivan Kandu</strong> est un artiste suisse au parcours vibrant et multiculturel. Arrivé en Suisse en 2006, il grandit entre le Tessin et le canton de Vaud, où il forge son identité artistique unique.
                 </p>
                 
-                <p class="bio-text">
+                <p class="bio-text" data-i18n="bio_text2">
                     Son histoire avec la musique commence très tôt : à seulement 10 ans, il devient la voix solo et le leader de la chorale « Les Anges du Seigneur ». Cette première scène révèle déjà une présence naturelle et une puissance vocale remarquable.
                 </p>
                 
-                <p class="bio-text">
+                <p class="bio-text" data-i18n="bio_text3">
                     Influencé par le <strong>RnB</strong>, la <strong>Rumba</strong>, la <strong>Pop</strong> et l'<strong>Afropop</strong>, Ivan se fait connaître grâce à ses reprises sur YouTube avant de passer à la création originale. Il écrit et compose en français, italien, lingala et anglais.
                 </p>
 
                 <div class="bio-tags">
                     <span class="bio-tag">RnB</span>
-                    <span class="bio-tag">Rumba Congolaise</span>
-                    <span class="bio-tag">Pop Africaine</span>
+                    <span class="bio-tag" data-i18n="tag_rumba">Rumba Congolaise</span>
+                    <span class="bio-tag" data-i18n="tag_pop">Pop Africaine</span>
                     <span class="bio-tag">Afropop</span>
                     <span class="bio-tag">Soul</span>
                 </div>
@@ -1856,78 +2520,103 @@
         </div>
     </section>
 
-    <!-- SECTION TOURNÉE -->
+    <!-- ============================================
+         SECTION TOURNÉE
+         ============================================ -->
     <section class="tour-section" id="tour">
         <div class="tour-empty-state reveal">
             <i class="fas fa-microphone-alt tour-icon"></i>
-            <h2 class="section-title" style="margin-bottom: 20px;">Tournée</h2>
-            <p class="tour-text">Prochaines dates à venir</p>
-            <p class="tour-subtext">Reste connecté pour ne rien manquer des prochains concerts</p>
-            <button class="notify-btn">Me notifier</button>
+            <h2 class="section-title" style="margin-bottom: 20px;" data-i18n="tour">Tournée</h2>
+            <p class="tour-text" data-i18n="dates_coming">Prochaines dates à venir</p>
+            <p class="tour-subtext" data-i18n="stay_connected">Reste connecté pour ne rien manquer des prochains concerts</p>
+            <button class="notify-btn" data-i18n="notify_me">Me notifier</button>
         </div>
     </section>
 
-    <!-- NEWSLETTER -->
+    <!-- ============================================
+         NEWSLETTER
+         ============================================ -->
     <section class="newsletter-section" id="contact">
         <div class="newsletter-content reveal">
-            <h2 class="newsletter-title">Rejoins le Mouvement</h2>
-            <p class="newsletter-subtitle">
+            <h2 class="newsletter-title" data-i18n="join_movement">Rejoins le Mouvement</h2>
+            <p class="newsletter-subtitle" data-i18n="newsletter_desc">
                 Inscris-toi pour recevoir en exclusivité les nouveaux morceaux, 
                 les dates de tournée et les actualités directement dans ta boîte mail.
             </p>
-            <form class="newsletter-form-premium" onsubmit="event.preventDefault(); alert('Merci pour ton inscription !');">
-                <input type="email" class="newsletter-input-premium" placeholder="Ton adresse email" required>
-                <button type="submit" class="newsletter-btn-premium">S'inscrire</button>
+            <form class="newsletter-form-premium" onsubmit="event.preventDefault(); alert(translations[currentLang].thanks_subscribe);">
+                <input type="email" class="newsletter-input-premium" data-i18n-placeholder="email_placeholder" placeholder="Ton adresse email" required>
+                <button type="submit" class="newsletter-btn-premium" data-i18n="subscribe">S'inscrire</button>
             </form>
             <p class="newsletter-guarantee">
-                <i class="fas fa-lock"></i> Pas de spam, désinscription possible à tout moment
+                <i class="fas fa-lock"></i> <span data-i18n="no_spam">Pas de spam, désinscription possible à tout moment</span>
             </p>
         </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- ============================================
+         FOOTER
+         ============================================ -->
     <footer>
         <div class="footer-content">
             <div>
                 <div class="footer-brand">IK</div>
-                <p class="footer-tagline">
+                <p class="footer-tagline" data-i18n="footer_tagline">
                     Musique sans frontières. 
                     Un voyage entre l'Afrique et l'Europe, entre tradition et modernité.
                 </p>
             </div>
             
             <div>
-                <h4 class="footer-title">Navigation</h4>
+                <h4 class="footer-title" data-i18n="navigation">Navigation</h4>
                 <ul class="footer-links">
-                    <li><a href="#music">Musique</a></li>
-                    <li><a href="#album">Album</a></li>
-                    <li><a href="#single">Single</a></li>
-                    <li><a href="#gallery">Galerie</a></li>
+                    <li><a href="#music" data-i18n="nav_music">Musique</a></li>
+                    <li><a href="#album" data-i18n="nav_album">Album</a></li>
+                    <li><a href="#single" data-i18n="nav_single">Single</a></li>
+                    <li><a href="#gallery" data-i18n="nav_gallery">Galerie</a></li>
                 </ul>
             </div>
             
             <div>
-                <h4 class="footer-title">Légal</h4>
+                <h4 class="footer-title" data-i18n="legal">Légal</h4>
                 <ul class="footer-links">
-                    <li><a href="#">Mentions légales</a></li>
-                    <li><a href="#">Confidentialité</a></li>
-                    <li><a href="#">Cookies</a></li>
+                    <li><a href="#" data-i18n="legal_notice">Mentions légales</a></li>
+                    <li><a href="#" data-i18n="privacy">Confidentialité</a></li>
+                    <li><a href="#" data-i18n="cookies">Cookies</a></li>
                 </ul>
             </div>
             
             <div>
-                <h4 class="footer-title">Contact</h4>
+                <h4 class="footer-title" data-i18n="contact">Contact</h4>
                 <ul class="footer-links">
-                    <li><a href="mailto:jessic.perrin@gmail.com?subject=Booking%20-%20Demande%20de%20réservation">Booking</a></li>
-                    <li><a href="mailto:jessic.perrin@gmail.com?subject=Presse%20-%20Demande%20d'information">Presse</a></li>
-                    <li><a href="mailto:jessic.perrin@gmail.com?subject=Partenariat%20-%20Proposition%20de%20collaboration">Partenariats</a></li>
+                    <li><a href="mailto:jessic.perrin@gmail.com?subject=Booking%20-%20Demande%20de%20réservation" data-i18n="booking">Booking</a></li>
+                    <li><a href="mailto:jessic.perrin@gmail.com?subject=Presse%20-%20Demande%20d'information" data-i18n="press">Presse</a></li>
+                    <li><a href="mailto:jessic.perrin@gmail.com?subject=Partenariat%20-%20Proposition%20de%20collaboration" data-i18n="partnerships">Partenariats</a></li>
                 </ul>
                 <p style="color: var(--gray); font-size: 0.9rem; margin-top: 20px; word-break: break-all;">jessic.perrin@gmail.com</p>
+                
+                <!-- CONTACT MANAGER -->
+                <div class="manager-contact">
+                    <div class="manager-toggle" onclick="toggleManager()">
+                        <i class="fas fa-user-tie"></i>
+                        <span data-i18n="manager">Manager</span>
+                        <i class="fas fa-chevron-down" style="margin-left: auto;"></i>
+                    </div>
+                    <div class="manager-info" id="managerInfo">
+                        <div class="manager-item">
+                            <i class="fas fa-envelope"></i>
+                            <a href="mailto:jessic.perrin@gmail.com">jessic.perrin@gmail.com</a>
+                        </div>
+                        <div class="manager-item">
+                            <i class="fas fa-phone"></i>
+                            <a href="tel:+41766879192">+41 76 687 91 92</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2024 Ivan Kandu (IK). Tous droits réservés.</p>
+            <p>&copy; 2024 Ivan Kandu (IK). <span data-i18n="all_rights">Tous droits réservés.</span></p>
             <div class="footer-socials">
                 <a href="https://instagram.com/ik_ivk" target="_blank"><i class="fab fa-instagram"></i></a>
                 <a href="https://tiktok.com/@ik_ivk" target="_blank"><i class="fab fa-tiktok"></i></a>
@@ -1937,22 +2626,689 @@
         </div>
     </footer>
 
-    <!-- LIGHTBOX -->
+    <!-- ============================================
+         LIGHTBOX
+         ============================================ -->
     <div class="lightbox-premium" id="lightbox" onclick="closeLightbox()">
         <div class="lightbox-close-premium"><i class="fas fa-times"></i></div>
         <img src="" alt="Full size" class="lightbox-img-premium" id="lightboxImg">
     </div>
 
+    <!-- ============================================
+         JAVASCRIPT
+         ============================================ -->
     <script>
-        // DÉMARRAGE
-        function startExperience() {
-            document.getElementById('startOverlay').classList.add('hidden');
-            const audio = document.getElementById('welcomeJingle');
-            audio.volume = 0.5;
-            audio.play().catch(e => console.log('Audio autoplay prevented'));
+
+        // ============================================
+        // TRADUCTIONS MULTILINGUES
+        // ============================================
+        const translations = {
+            fr: {
+                enter: "Entrer dans l'univers",
+                nav_music: "Musique",
+                nav_album: "Album",
+                nav_single: "Single",
+                nav_social: "Réseaux",
+                nav_gallery: "Galerie",
+                nav_videos: "Vidéos",
+                nav_bio: "Bio",
+                nav_contact: "Contact",
+                hero_label: "Nouveau Single",
+                hero_subtitle: "Disponible sur toutes les plateformes",
+                discover: "Découvrir",
+                streaming: "Streaming",
+                music: "Musique",
+                listen_now: "Écouter maintenant",
+                album_badge: "Album • 2024",
+                album_meta: "10 titres • 45 minutes",
+                album_desc: "Un voyage musical à travers le temps et les émotions. TIME marque une évolution artistique majeure, mêlant influences africaines et sonorités européennes dans une production raffinée et contemporaine.",
+                new_single: "Nouveau Single",
+                single_desc: "Le nouveau single qui marque un tournant. Une production explosive qui révèle toute l'énergie et la passion d'IK. Disponible maintenant sur toutes les plateformes de streaming.",
+                listen: "Écouter",
+                watch_clip: "Voir le clip",
+                now_available: "Maintenant disponible",
+                follow_me: "Suivez-moi",
+                social_networks: "Réseaux Sociaux",
+                follow: "Suivre",
+                media: "Médias",
+                gallery: "Galerie",
+                concert_live: "Concert Live",
+                studio_session: "Studio Session",
+                portrait: "Portrait",
+                festival: "Festival",
+                backstage: "Backstage",
+                shooting: "Shooting",
+                content: "Contenu",
+                videos: "Vidéos",
+                official_clip: "Clip Officiel",
+                views: "vues",
+                bio_role: "Artiste • Chanteur • Compositeur",
+                bio_text1: "Né le 12 janvier 1993 en République démocratique du Congo, <strong>Ivan Kandu</strong> est un artiste suisse au parcours vibrant et multiculturel. Arrivé en Suisse en 2006, il grandit entre le Tessin et le canton de Vaud, où il forge son identité artistique unique.",
+                bio_text2: "Son histoire avec la musique commence très tôt : à seulement 10 ans, il devient la voix solo et le leader de la chorale « Les Anges du Seigneur ». Cette première scène révèle déjà une présence naturelle et une puissance vocale remarquable.",
+                bio_text3: "Influencé par le <strong>RnB</strong>, la <strong>Rumba</strong>, la <strong>Pop</strong> et l'<strong>Afropop</strong>, Ivan se fait connaître grâce à ses reprises sur YouTube avant de passer à la création originale. Il écrit et compose en français, italien, lingala et anglais.",
+                tag_rumba: "Rumba Congolaise",
+                tag_pop: "Pop Africaine",
+                tour: "Tournée",
+                dates_coming: "Prochaines dates à venir",
+                stay_connected: "Reste connecté pour ne rien manquer des prochains concerts",
+                notify_me: "Me notifier",
+                join_movement: "Rejoins le Mouvement",
+                newsletter_desc: "Inscris-toi pour recevoir en exclusivité les nouveaux morceaux, les dates de tournée et les actualités directement dans ta boîte mail.",
+                email_placeholder: "Ton adresse email",
+                subscribe: "S'inscrire",
+                no_spam: "Pas de spam, désinscription possible à tout moment",
+                thanks_subscribe: "Merci pour ton inscription !",
+                footer_tagline: "Musique sans frontières. Un voyage entre l'Afrique et l'Europe, entre tradition et modernité.",
+                navigation: "Navigation",
+                legal: "Légal",
+                legal_notice: "Mentions légales",
+                privacy: "Confidentialité",
+                cookies: "Cookies",
+                contact: "Contact",
+                booking: "Booking",
+                press: "Presse",
+                partnerships: "Partenariats",
+                manager: "Manager",
+                all_rights: "Tous droits réservés.",
+                add_photo: "Ajoute ta photo ici<br>(bio-photo.jpg)"
+            },
+            en: {
+                enter: "Enter the universe",
+                nav_music: "Music",
+                nav_album: "Album",
+                nav_single: "Single",
+                nav_social: "Social",
+                nav_gallery: "Gallery",
+                nav_videos: "Videos",
+                nav_bio: "Bio",
+                nav_contact: "Contact",
+                hero_label: "New Single",
+                hero_subtitle: "Available on all platforms",
+                discover: "Discover",
+                streaming: "Streaming",
+                music: "Music",
+                listen_now: "Listen now",
+                album_badge: "Album • 2024",
+                album_meta: "10 tracks • 45 minutes",
+                album_desc: "A musical journey through time and emotions. TIME marks a major artistic evolution, blending African influences with European sounds in a refined and contemporary production.",
+                new_single: "New Single",
+                single_desc: "The new single that marks a turning point. An explosive production that reveals all the energy and passion of IK. Available now on all streaming platforms.",
+                listen: "Listen",
+                watch_clip: "Watch the video",
+                now_available: "Now available",
+                follow_me: "Follow me",
+                social_networks: "Social Networks",
+                follow: "Follow",
+                media: "Media",
+                gallery: "Gallery",
+                concert_live: "Live Concert",
+                studio_session: "Studio Session",
+                portrait: "Portrait",
+                festival: "Festival",
+                backstage: "Backstage",
+                shooting: "Shooting",
+                content: "Content",
+                videos: "Videos",
+                official_clip: "Official Video",
+                views: "views",
+                bio_role: "Artist • Singer • Composer",
+                bio_text1: "Born on January 12, 1993, in the Democratic Republic of Congo, <strong>Ivan Kandu</strong> is a Swiss artist with a vibrant and multicultural journey. Arriving in Switzerland in 2006, he grew up between Ticino and the canton of Vaud, where he forged his unique artistic identity.",
+                bio_text2: "His story with music begins very early: at just 10 years old, he becomes the solo voice and leader of the choir « Les Anges du Seigneur ». This first stage already reveals a natural presence and remarkable vocal power.",
+                bio_text3: "Influenced by <strong>RnB</strong>, <strong>Rumba</strong>, <strong>Pop</strong>, and <strong>Afropop</strong>, Ivan made a name for himself through his covers on YouTube before moving on to original creation. He writes and composes in French, Italian, Lingala, and English.",
+                tag_rumba: "Congolese Rumba",
+                tag_pop: "African Pop",
+                tour: "Tour",
+                dates_coming: "Upcoming dates coming soon",
+                stay_connected: "Stay connected so you don't miss the next concerts",
+                notify_me: "Notify me",
+                join_movement: "Join the Movement",
+                newsletter_desc: "Sign up to exclusively receive new tracks, tour dates, and news directly in your inbox.",
+                email_placeholder: "Your email address",
+                subscribe: "Subscribe",
+                no_spam: "No spam, unsubscribe at any time",
+                thanks_subscribe: "Thank you for subscribing!",
+                footer_tagline: "Music without borders. A journey between Africa and Europe, between tradition and modernity.",
+                navigation: "Navigation",
+                legal: "Legal",
+                legal_notice: "Legal Notice",
+                privacy: "Privacy",
+                cookies: "Cookies",
+                contact: "Contact",
+                booking: "Booking",
+                press: "Press",
+                partnerships: "Partnerships",
+                manager: "Manager",
+                all_rights: "All rights reserved.",
+                add_photo: "Add your photo here<br>(bio-photo.jpg)"
+            },
+            it: {
+                enter: "Entra nell'universo",
+                nav_music: "Musica",
+                nav_album: "Album",
+                nav_single: "Singolo",
+                nav_social: "Social",
+                nav_gallery: "Galleria",
+                nav_videos: "Video",
+                nav_bio: "Bio",
+                nav_contact: "Contatto",
+                hero_label: "Nuovo Singolo",
+                hero_subtitle: "Disponibile su tutte le piattaforme",
+                discover: "Scopri",
+                streaming: "Streaming",
+                music: "Musica",
+                listen_now: "Ascolta ora",
+                album_badge: "Album • 2024",
+                album_meta: "10 brani • 45 minuti",
+                album_desc: "Un viaggio musicale attraverso il tempo e le emozioni. TIME segna un'evoluzione artistica importante, mescolando influenze africane e sonorità europee in una produzione raffinata e contemporanea.",
+                new_single: "Nuovo Singolo",
+                single_desc: "Il nuovo singolo che segna una svolta. Una produzione esplosiva che rivela tutta l'energia e la passione di IK. Disponibile ora su tutte le piattaforme di streaming.",
+                listen: "Ascolta",
+                watch_clip: "Guarda il video",
+                now_available: "Ora disponibile",
+                follow_me: "Seguimi",
+                social_networks: "Social Network",
+                follow: "Segui",
+                media: "Media",
+                gallery: "Galleria",
+                concert_live: "Concerto Live",
+                studio_session: "Sessione Studio",
+                portrait: "Ritratto",
+                festival: "Festival",
+                backstage: "Backstage",
+                shooting: "Shooting",
+                content: "Contenuto",
+                videos: "Video",
+                official_clip: "Video Ufficiale",
+                views: "visualizzazioni",
+                bio_role: "Artista • Cantante • Compositore",
+                bio_text1: "Nato il 12 gennaio 1993 nella Repubblica Democratica del Congo, <strong>Ivan Kandu</strong> è un artista svizzero con un percorso vibrante e multiculturale. Arrivato in Svizzera nel 2006, cresce tra il Ticino e il canton Vaud, dove forgia la sua unica identità artistica.",
+                bio_text2: "La sua storia con la musica inizia molto presto: a soli 10 anni diventa la voce solista e il leader del coro « Les Anges du Seigneur ». Questa prima scena rivela già una presenza naturale e una notevole potenza vocale.",
+                bio_text3: "Influenzato dall'<strong>RnB</strong>, dalla <strong>Rumba</strong>, dalla <strong>Pop</strong> e dall'<strong>Afropop</strong>, Ivan si è fatto conoscere attraverso le sue cover su YouTube prima di passare alla creazione originale. Scrive e compone in francese, italiano, lingala e inglese.",
+                tag_rumba: "Rumba Congolese",
+                tag_pop: "Pop Africana",
+                tour: "Tour",
+                dates_coming: "Prossime date in arrivo",
+                stay_connected: "Resta connesso per non perdere i prossimi concerti",
+                notify_me: "Avvisami",
+                join_movement: "Unisciti al Movimento",
+                newsletter_desc: "Iscriviti per ricevere in esclusiva i nuovi brani, le date del tour e le notizie direttamente nella tua casella di posta.",
+                email_placeholder: "Il tuo indirizzo email",
+                subscribe: "Iscriviti",
+                no_spam: "Nessuno spam, disiscrizione possibile in qualsiasi momento",
+                thanks_subscribe: "Grazie per l'iscrizione!",
+                footer_tagline: "Musica senza confini. Un viaggio tra l'Africa e l'Europa, tra tradizione e modernità.",
+                navigation: "Navigazione",
+                legal: "Legale",
+                legal_notice: "Note legali",
+                privacy: "Privacy",
+                cookies: "Cookie",
+                contact: "Contatto",
+                booking: "Booking",
+                press: "Stampa",
+                partnerships: "Partnership",
+                manager: "Manager",
+                all_rights: "Tutti i diritti riservati.",
+                add_photo: "Aggiungi la tua foto qui<br>(bio-photo.jpg)"
+            },
+            de: {
+                enter: "Betrete das Universum",
+                nav_music: "Musik",
+                nav_album: "Album",
+                nav_single: "Single",
+                nav_social: "Sozial",
+                nav_gallery: "Galerie",
+                nav_videos: "Videos",
+                nav_bio: "Bio",
+                nav_contact: "Kontakt",
+                hero_label: "Neue Single",
+                hero_subtitle: "Auf allen Plattformen verfügbar",
+                discover: "Entdecken",
+                streaming: "Streaming",
+                music: "Musik",
+                listen_now: "Jetzt anhören",
+                album_badge: "Album • 2024",
+                album_meta: "10 Titel • 45 Minuten",
+                album_desc: "Eine musikalische Reise durch Zeit und Emotionen. TIME markiert eine große künstlerische Evolution, die afrikanische Einflüsse mit europäischen Klängen in einer raffinierten und zeitgenössischen Produktion verbindet.",
+                new_single: "Neue Single",
+                single_desc: "Die neue Single, die einen Wendepunkt markiert. Eine explosive Produktion, die die ganze Energie und Leidenschaft von IK offenbart. Jetzt auf allen Streaming-Plattformen verfügbar.",
+                listen: "Anhören",
+                watch_clip: "Video ansehen",
+                now_available: "Jetzt verfügbar",
+                follow_me: "Folge mir",
+                social_networks: "Soziale Netzwerke",
+                follow: "Folgen",
+                media: "Medien",
+                gallery: "Galerie",
+                concert_live: "Live-Konzert",
+                studio_session: "Studio-Session",
+                portrait: "Porträt",
+                festival: "Festival",
+                backstage: "Backstage",
+                shooting: "Shooting",
+                content: "Inhalt",
+                videos: "Videos",
+                official_clip: "Offizielles Video",
+                views: "Aufrufe",
+                bio_role: "Künstler • Sänger • Komponist",
+                bio_text1: "Geboren am 12. Januar 1993 in der Demokratischen Republik Kongo, ist <strong>Ivan Kandu</strong> ein Schweizer Künstler mit einem lebendigen und multikulturellen Werdegang. 2006 kam er in die Schweiz und wuchs zwischen dem Tessin und dem Kanton Waadt auf, wo er seine einzigartige künstlerische Identität schmiedete.",
+                bio_text2: "Seine Geschichte mit der Musik beginnt sehr früh: Mit nur 10 Jahren wird er zur Solostimme und Leiter des Chores « Les Anges du Seigneur ». Diese erste Bühne offenbart bereits eine natürliche Präsenz und bemerkbare Stimmkraft.",
+                bio_text3: "Beeinflusst von <strong>RnB</strong>, <strong>Rumba</strong>, <strong>Pop</strong> und <strong>Afropop</strong>, machte Ivan sich durch seine Covers auf YouTube einen Namen, bevor er zur eigenen Kreation überging. Er schreibt und komponiert auf Französisch, Italienisch, Lingala und Englisch.",
+                tag_rumba: "Kongolesische Rumba",
+                tag_pop: "Afrikanische Pop",
+                tour: "Tour",
+                dates_coming: "Kommende Termine demnächst",
+                stay_connected: "Bleib verbunden, um die nächsten Konzerte nicht zu verpassen",
+                notify_me: "Benachrichtige mich",
+                join_movement: "Bewegung beitreten",
+                newsletter_desc: "Melde dich an, um exklusiv neue Tracks, Tourdaten und Neuigkeiten direkt in dein Postfach zu erhalten.",
+                email_placeholder: "Deine E-Mail-Adresse",
+                subscribe: "Abonnieren",
+                no_spam: "Kein Spam, jederzeit abmeldbar",
+                thanks_subscribe: "Danke für deine Anmeldung!",
+                footer_tagline: "Musik ohne Grenzen. Eine Reise zwischen Afrika und Europa, zwischen Tradition und Moderne.",
+                navigation: "Navigation",
+                legal: "Rechtliches",
+                legal_notice: "Impressum",
+                privacy: "Datenschutz",
+                cookies: "Cookies",
+                contact: "Kontakt",
+                booking: "Booking",
+                press: "Presse",
+                partnerships: "Partnerschaften",
+                manager: "Manager",
+                all_rights: "Alle Rechte vorbehalten.",
+                add_photo: "Füge dein Foto hier hinzu<br>(bio-photo.jpg)"
+            },
+            pt: {
+                enter: "Entrar no universo",
+                nav_music: "Música",
+                nav_album: "Álbum",
+                nav_single: "Single",
+                nav_social: "Social",
+                nav_gallery: "Galeria",
+                nav_videos: "Vídeos",
+                nav_bio: "Bio",
+                nav_contact: "Contato",
+                hero_label: "Novo Single",
+                hero_subtitle: "Disponível em todas as plataformas",
+                discover: "Descobrir",
+                streaming: "Streaming",
+                music: "Música",
+                listen_now: "Ouvir agora",
+                album_badge: "Álbum • 2024",
+                album_meta: "10 faixas • 45 minutos",
+                album_desc: "Uma jornada musical através do tempo e das emoções. TIME marca uma evolução artística importante, misturando influências africanas e sonoridades europeias em uma produção refinada e contemporânea.",
+                new_single: "Novo Single",
+                single_desc: "O novo single que marca uma virada. Uma produção explosiva que revela toda a energia e paixão de IK. Disponível agora em todas as plataformas de streaming.",
+                listen: "Ouvir",
+                watch_clip: "Ver o vídeo",
+                now_available: "Agora disponível",
+                follow_me: "Siga-me",
+                social_networks: "Redes Sociais",
+                follow: "Seguir",
+                media: "Mídia",
+                gallery: "Galeria",
+                concert_live: "Concerto Ao Vivo",
+                studio_session: "Sessão de Estúdio",
+                portrait: "Retrato",
+                festival: "Festival",
+                backstage: "Bastidores",
+                shooting: "Ensaio",
+                content: "Conteúdo",
+                videos: "Vídeos",
+                official_clip: "Vídeo Oficial",
+                views: "visualizações",
+                bio_role: "Artista • Cantor • Compositor",
+                bio_text1: "Nascido em 12 de janeiro de 1993 na República Democrática do Congo, <strong>Ivan Kandu</strong> é um artista suíço com uma trajetória vibrante e multicultural. Chegou à Suíça em 2006 e cresceu entre o Ticino e o cantão de Vaud, onde forjou sua identidade artística única.",
+                bio_text2: "Sua história com a música começa muito cedo: aos apenas 10 anos, torna-se a voz solo e líder do coral « Les Anges du Seigneur ». Este primeiro palco já revela uma presença natural e um poder vocal notável.",
+                bio_text3: "Influenciado pelo <strong>RnB</strong>, <strong>Rumba</strong>, <strong>Pop</strong> e <strong>Afropop</strong>, Ivan ficou conhecido por seus covers no YouTube antes de passar para a criação original. Ele escreve e compõe em francês, italiano, lingala e inglês.",
+                tag_rumba: "Rumba Congolesa",
+                tag_pop: "Pop Africana",
+                tour: "Turnê",
+                dates_coming: "Próximas datas em breve",
+                stay_connected: "Fique conectado para não perder os próximos concertos",
+                notify_me: "Notifique-me",
+                join_movement: "Junte-se ao Movimento",
+                newsletter_desc: "Inscreva-se para receber exclusivamente novas faixas, datas de turnê e notícias diretamente na sua caixa de entrada.",
+                email_placeholder: "Seu endereço de email",
+                subscribe: "Inscrever-se",
+                no_spam: "Sem spam, cancelamento a qualquer momento",
+                thanks_subscribe: "Obrigado por se inscrever!",
+                footer_tagline: "Música sem fronteiras. Uma jornada entre a África e a Europa, entre tradição e modernidade.",
+                navigation: "Navegação",
+                legal: "Legal",
+                legal_notice: "Aviso legal",
+                privacy: "Privacidade",
+                cookies: "Cookies",
+                contact: "Contato",
+                booking: "Booking",
+                press: "Imprensa",
+                partnerships: "Parcerias",
+                manager: "Manager",
+                all_rights: "Todos os direitos reservados.",
+                add_photo: "Adicione sua foto aqui<br>(bio-photo.jpg)"
+            },
+            es: {
+                enter: "Entrar al universo",
+                nav_music: "Música",
+                nav_album: "Álbum",
+                nav_single: "Single",
+                nav_social: "Social",
+                nav_gallery: "Galería",
+                nav_videos: "Videos",
+                nav_bio: "Bio",
+                nav_contact: "Contacto",
+                hero_label: "Nuevo Single",
+                hero_subtitle: "Disponible en todas las plataformas",
+                discover: "Descubrir",
+                streaming: "Streaming",
+                music: "Música",
+                listen_now: "Escuchar ahora",
+                album_badge: "Álbum • 2024",
+                album_meta: "10 pistas • 45 minutos",
+                album_desc: "Un viaje musical a través del tiempo y las emociones. TIME marca una evolución artística importante, mezclando influencias africanas y sonoridades europeas en una producción refinada y contemporánea.",
+                new_single: "Nuevo Single",
+                single_desc: "El nuevo single que marca un punto de inflexión. Una producción explosiva que revela toda la energía y pasión de IK. Disponible ahora en todas las plataformas de streaming.",
+                listen: "Escuchar",
+                watch_clip: "Ver el video",
+                now_available: "Ahora disponible",
+                follow_me: "Sígueme",
+                social_networks: "Redes Sociales",
+                follow: "Seguir",
+                media: "Medios",
+                gallery: "Galería",
+                concert_live: "Concierto en Vivo",
+                studio_session: "Sesión de Estudio",
+                portrait: "Retrato",
+                festival: "Festival",
+                backstage: "Detrás de Escena",
+                shooting: "Sesión Fotográfica",
+                content: "Contenido",
+                videos: "Videos",
+                official_clip: "Video Oficial",
+                views: "vistas",
+                bio_role: "Artista • Cantante • Compositor",
+                bio_text1: "Nacido el 12 de enero de 1993 en la República Democrática del Congo, <strong>Ivan Kandu</strong> es un artista suizo con una trayectoria vibrante y multicultural. Llegó a Suiza en 2006 y creció entre el Tesino y el cantón de Vaud, donde forjó su identidad artística única.",
+                bio_text2: "Su historia con la música comienza muy temprano: a los solo 10 años, se convierte en la voz solista y líder del coro « Les Anges du Seigneur ». Este primer escenario ya revela una presencia natural y un poder vocal notable.",
+                bio_text3: "Influenciado por el <strong>RnB</strong>, la <strong>Rumba</strong>, el <strong>Pop</strong> y el <strong>Afropop</strong>, Ivan se dio a conocer a través de sus covers en YouTube antes de pasar a la creación original. Escribe y compone en francés, italiano, lingala e inglés.",
+                tag_rumba: "Rumba Congoleña",
+                tag_pop: "Pop Africana",
+                tour: "Gira",
+                dates_coming: "Próximas fechas próximamente",
+                stay_connected: "Mantente conectado para no perderte los próximos conciertos",
+                notify_me: "Notificarme",
+                join_movement: "Únete al Movimiento",
+                newsletter_desc: "Regístrate para recibir exclusivamente nuevas pistas, fechas de gira y noticias directamente en tu bandeja de entrada.",
+                email_placeholder: "Tu dirección de email",
+                subscribe: "Suscribirse",
+                no_spam: "Sin spam, cancelación en cualquier momento",
+                thanks_subscribe: "¡Gracias por suscribirte!",
+                footer_tagline: "Música sin fronteras. Un viaje entre África y Europa, entre tradición y modernidad.",
+                navigation: "Navegación",
+                legal: "Legal",
+                legal_notice: "Aviso legal",
+                privacy: "Privacidad",
+                cookies: "Cookies",
+                contact: "Contacto",
+                booking: "Booking",
+                press: "Prensa",
+                partnerships: "Colaboraciones",
+                manager: "Manager",
+                all_rights: "Todos los derechos reservados.",
+                add_photo: "Añade tu foto aquí<br>(bio-photo.jpg)"
+            },
+            ln: {
+                enter: "Kota na mokili",
+                nav_music: "Miziki",
+                nav_album: "Album",
+                nav_single: "Single",
+                nav_social: "Réseaux",
+                nav_gallery: "Galerie",
+                nav_videos: "Vidéos",
+                nav_bio: "Bio",
+                nav_contact: "Contact",
+                hero_label: "Single ya sika",
+                hero_subtitle: "Ezali na ba plateforme nionso",
+                discover: "Kokanga",
+                streaming: "Streaming",
+                music: "Miziki",
+                listen_now: "Yoka sikawa",
+                album_badge: "Album • 2024",
+                album_meta: "10 ba titres • 45 minutes",
+                album_desc: "Liloba ya miziki na nzela ya ntango mpe ba émotions. TIME ezali changement ya art majeur, mélange ba influences africaines mpe ba sonorités européennes na production ya raffinée mpe contemporaine.",
+                new_single: "Single ya sika",
+                single_desc: "Single ya sika oyo ezali changement. Production explosive oyo ebimisi énergie nionso mpe passion ya IK. Ezali sikawa na ba plateformes streaming nionso.",
+                listen: "Yoka",
+                watch_clip: "Tala clip",
+                now_available: "Ezali sikawa",
+                follow_me: "Landá ngai",
+                social_networks: "Réseaux Sociaux",
+                follow: "Landá",
+                media: "Médias",
+                gallery: "Galerie",
+                concert_live: "Concert Live",
+                studio_session: "Studio Session",
+                portrait: "Portrait",
+                festival: "Festival",
+                backstage: "Backstage",
+                shooting: "Shooting",
+                content: "Contenu",
+                videos: "Vidéos",
+                official_clip: "Clip Officiel",
+                views: "vues",
+                bio_role: "Artiste • Chanteur • Compositeur",
+                bio_text1: "Aboti le 12 janvier 1993 na République démocratique du Congo, <strong>Ivan Kandu</strong> azali artiste suisse na parcours vibrant mpe multiculturel. Akóti na Suisse na 2006, akoli na kati ya Tessin mpe canton ya Vaud, wapi akangaki identité artistique na ye ya unique.",
+                bio_text2: "Lisapo na ye na miziki ebandi noki: na mbula 10 kaka, akomi voix solo mpe leader ya chorale « Les Anges du Seigneur ». Scène ya liboso eye ebimisi déjà présence naturelle mpe puissance vocale ya remarquable.",
+                bio_text3: "Influencé na <strong>RnB</strong>, <strong>Rumba</strong>, <strong>Pop</strong> mpe <strong>Afropop</strong>, Ivan akómaki koyebana na nzela ya ba reprises na ye na YouTube liboso ya kokende na création originale. Azali kokoma mpe komposer na français, italien, lingala mpe anglais.",
+                tag_rumba: "Rumba Congolaise",
+                tag_pop: "Pop Africaine",
+                tour: "Tournée",
+                dates_coming: "Ba dates ya prochain ezali koya",
+                stay_connected: "Zala connecté mpo na kozanga kobosana ba concerts ya prochain",
+                notify_me: "Bengá ngai",
+                join_movement: "Kota na Mouvement",
+                newsletter_desc: "Inscrire yo mpo na kokoka ba morceaux ya sika, ba dates ya tournée mpe ba actualités na boîte mail na yo moko.",
+                email_placeholder: "Adresse email na yo",
+                subscribe: "S'inscrire",
+                no_spam: "Spam te, désinscription ezali possible na ntango nionso",
+                thanks_subscribe: "Merci mpo na inscription na yo!",
+                footer_tagline: "Miziki sans frontières. Liloba na kati ya Afrique mpe Europe, na kati ya tradition mpe modernité.",
+                navigation: "Navigation",
+                legal: "Légal",
+                legal_notice: "Mentions légales",
+                privacy: "Confidentialité",
+                cookies: "Cookies",
+                contact: "Contact",
+                booking: "Booking",
+                press: "Presse",
+                partnerships: "Partenariats",
+                manager: "Manager",
+                all_rights: "Ba droits nionso ezali reserve.",
+                add_photo: "Ajoute photo na yo awa<br>(bio-photo.jpg)"
+            }
+        };
+
+        let currentLang = 'fr';
+
+        // ============================================
+        // ANIMATION INTERGALACTIQUE
+        // ============================================
+        function createStars() {
+            const container = document.getElementById('starsContainer');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(star);
+            }
         }
 
+        function createSpeedLines() {
+            const container = document.getElementById('speedLines');
+            for (let i = 0; i < 20; i++) {
+                const line = document.createElement('div');
+                line.className = 'speed-line';
+                line.style.left = Math.random() * 100 + '%';
+                line.style.animationDelay = Math.random() * 1 + 's';
+                container.appendChild(line);
+            }
+        }
+
+        function startSpaceJourney() {
+            const overlay = document.getElementById('spaceOverlay');
+            const logo = document.getElementById('startLogo');
+            const btn = document.getElementById('startBtn');
+            const stars = document.querySelectorAll('.star');
+            const speedLines = document.getElementById('speedLines');
+            const lines = document.querySelectorAll('.speed-line');
+
+            // Cacher le bouton
+            btn.classList.add('hidden');
+
+            // Activer l'animation des étoiles
+            stars.forEach(star => star.classList.add('animating'));
+
+            // Activer les lignes de vitesse
+            speedLines.classList.add('active');
+            lines.forEach(line => line.classList.add('active'));
+
+            // Zoom sur le logo
+            logo.classList.add('zooming');
+
+            // Sortir de l'overlay après l'animation
+            setTimeout(() => {
+                overlay.classList.add('exiting');
+                
+                // Jouer le jingle si disponible
+                const audio = document.getElementById('welcomeJingle');
+                if (audio) {
+                    audio.volume = 0.5;
+                    audio.play().catch(e => console.log('Audio autoplay prevented'));
+                }
+            }, 2000);
+        }
+
+        // ============================================
+        // EFFETS DE PARTICULES (CLIC/TOUCH)
+        // ============================================
+        function createParticles(x, y) {
+            const container = document.getElementById('particleContainer');
+            const particleCount = 12;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle spark';
+                
+                const angle = (360 / particleCount) * i;
+                const distance = 50 + Math.random() * 50;
+                const tx = Math.cos(angle * Math.PI / 180) * distance;
+                const ty = Math.sin(angle * Math.PI / 180) * distance;
+                
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                particle.style.animation = `particleExplode 0.6s ease-out forwards`;
+                
+                container.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 600);
+            }
+
+            // Ajouter de la fumée
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const smoke = document.createElement('div');
+                    smoke.className = 'particle smoke';
+                    
+                    const angle = Math.random() * 360;
+                    const distance = 20 + Math.random() * 30;
+                    const tx = Math.cos(angle * Math.PI / 180) * distance;
+                    const ty = -50 - Math.random() * 50;
+                    
+                    smoke.style.left = x + 'px';
+                    smoke.style.top = y + 'px';
+                    smoke.style.setProperty('--tx', tx + 'px');
+                    smoke.style.setProperty('--ty', ty + 'px');
+                    smoke.style.animation = `smokeRise 1s ease-out forwards`;
+                    
+                    container.appendChild(smoke);
+                    
+                    setTimeout(() => smoke.remove(), 1000);
+                }, i * 100);
+            }
+        }
+
+        // Écouteurs d'événements pour les particules
+        document.addEventListener('click', (e) => {
+            createParticles(e.clientX, e.clientY);
+        });
+
+        document.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            createParticles(touch.clientX, touch.clientY);
+        });
+
+        // ============================================
+        // CHANGEMENT DE LANGUE
+        // ============================================
+        function changeLanguage(lang) {
+            currentLang = lang;
+            
+            // Mettre à jour le drapeau et le texte
+            const flags = {
+                fr: '🇫🇷', en: '🇬🇧', it: '🇮🇹', de: '🇩🇪', 
+                pt: '🇵🇹', es: '🇪🇸', ln: '🇨🇩'
+            };
+            const langNames = {
+                fr: 'FR', en: 'EN', it: 'IT', de: 'DE', 
+                pt: 'PT', es: 'ES', ln: 'LN'
+            };
+            
+            document.getElementById('currentFlag').textContent = flags[lang];
+            document.getElementById('currentLang').textContent = langNames[lang];
+            
+            // Mettre à jour les options actives
+            document.querySelectorAll('.lang-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            event.target.closest('.lang-option').classList.add('active');
+            
+            // Traduire tous les éléments
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+            
+            // Traduire les placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[lang][key]) {
+                    el.placeholder = translations[lang][key];
+                }
+            });
+            
+            // Mettre à jour l'attribut lang du HTML
+            document.documentElement.lang = lang;
+        }
+
+        // ============================================
+        // CONTACT MANAGER
+        // ============================================
+        function toggleManager() {
+            const info = document.getElementById('managerInfo');
+            const toggle = document.querySelector('.manager-toggle');
+            info.classList.toggle('active');
+            toggle.classList.toggle('active');
+        }
+
+        // ============================================
         // LIGHTBOX
+        // ============================================
         function openLightbox(src) {
             const lightbox = document.getElementById('lightbox');
             const img = document.getElementById('lightboxImg');
@@ -1967,13 +3323,17 @@
             document.body.style.overflow = 'auto';
         }
 
+        // ============================================
         // NAVIGATION SCROLL
+        // ============================================
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
             navbar.classList.toggle('scrolled', window.scrollY > 50);
         });
 
+        // ============================================
         // ANIMATIONS AU SCROLL
+        // ============================================
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -1989,7 +3349,9 @@
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // SMOOTH SCROLL POUR LES ANCRES
+        // ============================================
+        // SMOOTH SCROLL
+        // ============================================
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -2000,7 +3362,17 @@
             });
         });
 
+        // ============================================
+        // INITIALISATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            createSpeedLines();
+        });
+
+        // ============================================
         // EFFET PARALLAXE SUBTIL POUR LE HERO
+        // ============================================
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const heroBg = document.querySelector('.hero-bg');
