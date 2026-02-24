@@ -283,41 +283,12 @@
         }
 
         /* ============================================
-           SÉLECTEUR DE LANGUE
+           SÉLECTEUR DE LANGUE - INTÉGRÉ DANS LA NAV
            ============================================ */
         .language-selector {
-            position: fixed;
-            top: 25px;
-            right: 60px;
+            position: relative;
             z-index: 1001;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .lang-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: var(--gray);
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: var(--transition);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .lang-btn:hover {
-            background: rgba(255,255,255,0.1);
-            color: var(--light);
-        }
-
-        .lang-btn.active {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: var(--light);
+            margin-left: 30px;
         }
 
         .lang-dropdown {
@@ -412,6 +383,12 @@
             background: rgba(5,5,5,0.98);
             padding: 15px 60px;
             border-bottom: 1px solid rgba(255,51,51,0.3);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
         }
 
         .logo {
@@ -966,7 +943,7 @@
         }
 
         .album-cover-large:hover {
-            transform: perspective(1000px) rotateY(0deg) scale(1.02);
+            transform: perspective(1000px) rotateY(0deg);
         }
 
         .album-cover-large img {
@@ -1961,9 +1938,16 @@
            RESPONSIVE
            ============================================ */
         @media (max-width: 1200px) {
+            .nav-left {
+                gap: 20px;
+            }
+
+            .nav-links {
+                gap: 30px;
+            }
+
             .language-selector {
-                right: 30px;
-                top: 80px;
+                margin-left: 15px;
             }
 
             .social-platforms {
@@ -2038,19 +2022,26 @@
             nav {
                 padding: 20px 30px;
             }
+
+            .nav-left {
+                gap: 15px;
+            }
             
             .nav-links {
                 display: none;
             }
 
             .language-selector {
-                right: 20px;
-                top: 75px;
+                margin-left: 10px;
             }
 
             .lang-toggle {
                 padding: 8px 15px;
                 font-size: 0.8rem;
+            }
+
+            .lang-menu {
+                right: -50px;
             }
             
             .socials-fixed {
@@ -2126,6 +2117,16 @@
 <body>
 
     <!-- ============================================
+         AUDIO JINGLE - AJOUTÉ ICI
+         ============================================ -->
+    <audio id="welcomeJingle" preload="auto">
+        <source src="jingle.mp3" type="audio/mpeg">
+        <!-- Fallback pour d'autres formats si nécessaire -->
+        <source src="jingle.ogg" type="audio/ogg">
+        Votre navigateur ne supporte pas l'audio.
+    </audio>
+
+    <!-- ============================================
          CONTENEUR DE PARTICULES
          ============================================ -->
     <div class="particle-container" id="particleContainer"></div>
@@ -2141,63 +2142,63 @@
     </div>
 
     <!-- ============================================
-         SÉLECTEUR DE LANGUE
+         NAVIGATION - SÉLECTEUR DE LANGUE INTÉGRÉ
          ============================================ -->
-    <div class="language-selector">
-        <div class="lang-dropdown">
-            <button class="lang-toggle" id="langToggle">
-                <span class="lang-flag" id="currentFlag">🇫🇷</span>
-                <span id="currentLang">FR</span>
-                <i class="fas fa-chevron-down"></i>
-            </button>
-            <div class="lang-menu">
-                <div class="lang-option active" onclick="changeLanguage('fr')">
-                    <span class="lang-flag">🇫🇷</span>
-                    <span>Français</span>
-                </div>
-                <div class="lang-option" onclick="changeLanguage('en')">
-                    <span class="lang-flag">🇬🇧</span>
-                    <span>English</span>
-                </div>
-                <div class="lang-option" onclick="changeLanguage('it')">
-                    <span class="lang-flag">🇮🇹</span>
-                    <span>Italiano</span>
-                </div>
-                <div class="lang-option" onclick="changeLanguage('de')">
-                    <span class="lang-flag">🇩🇪</span>
-                    <span>Deutsch</span>
-                </div>
-                <div class="lang-option" onclick="changeLanguage('pt')">
-                    <span class="lang-flag">🇵🇹</span>
-                    <span>Português</span>
-                </div>
-                <div class="lang-option" onclick="changeLanguage('es')">
-                    <span class="lang-flag">🇪🇸</span>
-                    <span>Español</span>
-                </div>
-                <div class="lang-option" onclick="changeLanguage('ln')">
-                    <span class="lang-flag">🇨🇩</span>
-                    <span>Lingala</span>
+    <nav id="navbar">
+        <div class="nav-left">
+            <a href="#" class="logo">IK</a>
+            <ul class="nav-links">
+                <li><a href="#music" data-i18n="nav_music">Musique</a></li>
+                <li><a href="#album" data-i18n="nav_album">Album</a></li>
+                <li><a href="#single" data-i18n="nav_single">Single</a></li>
+                <li><a href="#social" data-i18n="nav_social">Réseaux</a></li>
+                <li><a href="#gallery" data-i18n="nav_gallery">Galerie</a></li>
+                <li><a href="#videos" data-i18n="nav_videos">Vidéos</a></li>
+                <li><a href="#bio" data-i18n="nav_bio">Bio</a></li>
+                <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+            </ul>
+        </div>
+        
+        <!-- SÉLECTEUR DE LANGUE INTÉGRÉ DANS LA NAV -->
+        <div class="language-selector">
+            <div class="lang-dropdown">
+                <button class="lang-toggle" id="langToggle">
+                    <span class="lang-flag" id="currentFlag">🇫🇷</span>
+                    <span id="currentLang">FR</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="lang-menu">
+                    <div class="lang-option active" onclick="changeLanguage('fr')">
+                        <span class="lang-flag">🇫🇷</span>
+                        <span>Français</span>
+                    </div>
+                    <div class="lang-option" onclick="changeLanguage('en')">
+                        <span class="lang-flag">🇬🇧</span>
+                        <span>English</span>
+                    </div>
+                    <div class="lang-option" onclick="changeLanguage('it')">
+                        <span class="lang-flag">🇮🇹</span>
+                        <span>Italiano</span>
+                    </div>
+                    <div class="lang-option" onclick="changeLanguage('de')">
+                        <span class="lang-flag">🇩🇪</span>
+                        <span>Deutsch</span>
+                    </div>
+                    <div class="lang-option" onclick="changeLanguage('pt')">
+                        <span class="lang-flag">🇵🇹</span>
+                        <span>Português</span>
+                    </div>
+                    <div class="lang-option" onclick="changeLanguage('es')">
+                        <span class="lang-flag">🇪🇸</span>
+                        <span>Español</span>
+                    </div>
+                    <div class="lang-option" onclick="changeLanguage('ln')">
+                        <span class="lang-flag">🇨🇩</span>
+                        <span>Lingala</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- ============================================
-         NAVIGATION
-         ============================================ -->
-    <nav id="navbar">
-        <a href="#" class="logo">IK</a>
-        <ul class="nav-links">
-            <li><a href="#music" data-i18n="nav_music">Musique</a></li>
-            <li><a href="#album" data-i18n="nav_album">Album</a></li>
-            <li><a href="#single" data-i18n="nav_single">Single</a></li>
-            <li><a href="#social" data-i18n="nav_social">Réseaux</a></li>
-            <li><a href="#gallery" data-i18n="nav_gallery">Galerie</a></li>
-            <li><a href="#videos" data-i18n="nav_videos">Vidéos</a></li>
-            <li><a href="#bio" data-i18n="nav_bio">Bio</a></li>
-            <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
-        </ul>
     </nav>
 
     <!-- ============================================
@@ -2592,8 +2593,7 @@
                     <li><a href="mailto:jessic.perrin@gmail.com?subject=Presse%20-%20Demande%20d'information" data-i18n="press">Presse</a></li>
                     <li><a href="mailto:jessic.perrin@gmail.com?subject=Partenariat%20-%20Proposition%20de%20collaboration" data-i18n="partnerships">Partenariats</a></li>
                 </ul>
-                <p style="color: var(--gray); font-size: 0.9rem; margin-top: 20px; word-break: break-all;">jessic.perrin@gmail.com</p>
-                
+               
                 <!-- CONTACT MANAGER -->
                 <div class="manager-contact">
                     <div class="manager-toggle" onclick="toggleManager()">
