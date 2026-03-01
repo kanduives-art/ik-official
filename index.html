@@ -8,8 +8,12 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;500;700&family=Inter:wght@300;400;600;800&display=swap');
         
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --primary: #ff3333;
             --primary-dark: #cc0000;
@@ -20,8 +24,10 @@
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        html { scroll-behavior: smooth; }
-        
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background: var(--dark);
@@ -30,10 +36,13 @@
             line-height: 1.6;
         }
 
-        .space-overlay {
+        /* OVERLAY DÉMARRAGE */
+        .start-overlay {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: var(--darker);
             z-index: 10000;
             display: flex;
@@ -41,57 +50,13 @@
             align-items: center;
             justify-content: center;
             gap: 40px;
-            overflow: hidden;
+            transition: opacity 0.8s ease, visibility 0.8s;
         }
 
-        .stars-container {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            overflow: hidden;
+        .start-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
             pointer-events: none;
-        }
-
-        .star {
-            position: absolute;
-            width: 2px; height: 2px;
-            background: white;
-            border-radius: 50%;
-            opacity: 0;
-        }
-
-        .star.animating { animation: starWarp 2s ease-out forwards; }
-
-        @keyframes starWarp {
-            0% { opacity: 0; transform: scale(0) translateZ(0); }
-            10% { opacity: 1; }
-            100% { opacity: 0; transform: scale(3) translateZ(1000px); }
-        }
-
-        .speed-lines {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            overflow: hidden;
-            pointer-events: none;
-            opacity: 0;
-        }
-
-        .speed-lines.active { opacity: 1; }
-
-        .speed-line {
-            position: absolute;
-            width: 2px; height: 100px;
-            background: linear-gradient(to bottom, transparent, var(--primary), transparent);
-            opacity: 0;
-        }
-
-        .speed-line.active { animation: speedLine 1s ease-out forwards; }
-
-        @keyframes speedLine {
-            0% { opacity: 0; transform: translateY(100vh) scaleY(0.5); }
-            50% { opacity: 1; }
-            100% { opacity: 0; transform: translateY(-100vh) scaleY(2); }
         }
 
         .start-logo {
@@ -99,17 +64,13 @@
             font-size: 8rem;
             font-weight: 700;
             letter-spacing: 20px;
+            animation: pulse 2s infinite;
             text-shadow: 0 0 60px rgba(255,51,51,0.5);
-            z-index: 10;
-            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .start-logo.zooming { animation: logoZoom 2s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-
-        @keyframes logoZoom {
-            0% { transform: scale(1); text-shadow: 0 0 60px rgba(255,51,51,0.5); }
-            50% { transform: scale(1.5); text-shadow: 0 0 150px rgba(255,51,51,0.8), 0 0 300px rgba(255,51,51,0.4); }
-            100% { transform: scale(50); opacity: 0; text-shadow: 0 0 500px rgba(255,51,51,1); }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
         }
 
         .start-btn {
@@ -125,120 +86,31 @@
             transition: var(--transition);
             position: relative;
             overflow: hidden;
-            z-index: 10;
         }
 
         .start-btn::before {
             content: '';
             position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
             background: var(--primary);
             transition: left 0.4s;
             z-index: -1;
         }
 
-        .start-btn:hover::before { left: 0; }
-        .start-btn:hover { color: var(--light); transform: scale(1.05); box-shadow: 0 0 40px rgba(255,51,51,0.6); }
-        .start-btn.hidden { opacity: 0; pointer-events: none; transform: scale(0.8); }
-
-        .space-overlay.exiting { animation: spaceExit 1s ease-out forwards; }
-
-        @keyframes spaceExit {
-            0% { opacity: 1; }
-            100% { opacity: 0; visibility: hidden; }
+        .start-btn:hover::before {
+            left: 0;
         }
 
-        .particle-container {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            pointer-events: none;
-            border-radius: 50%;
-        }
-
-        .particle.spark {
-            width: 4px; height: 4px;
-            background: var(--primary);
-            box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
-        }
-
-        .particle.smoke {
-            width: 20px; height: 20px;
-            background: radial-gradient(circle, rgba(255,255,255,0.3), transparent);
-            filter: blur(5px);
-        }
-
-        @keyframes particleExplode {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
-        }
-
-        @keyframes smokeRise {
-            0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
-            100% { transform: translate(var(--tx), var(--ty)) scale(3); opacity: 0; }
-        }
-
-        .language-selector { position: relative; z-index: 1001; margin-left: 30px; }
-        .lang-dropdown { position: relative; }
-        
-        .lang-toggle {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.2);
+        .start-btn:hover {
             color: var(--light);
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255,51,51,0.6);
         }
 
-        .lang-toggle:hover { background: rgba(255,255,255,0.1); border-color: var(--primary); }
-        
-        .lang-menu {
-            position: absolute;
-            top: 100%; right: 0;
-            margin-top: 10px;
-            background: rgba(10,10,10,0.98);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 10px;
-            min-width: 150px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s;
-            backdrop-filter: blur(20px);
-        }
-
-        .lang-dropdown:hover .lang-menu { opacity: 1; visibility: visible; transform: translateY(0); }
-        
-        .lang-option {
-            padding: 12px 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-        }
-
-        .lang-option:hover { background: rgba(255,51,51,0.2); }
-        .lang-option.active { background: var(--primary); }
-        .lang-flag { font-size: 1.2rem; }
-
+        /* NAVIGATION */
         nav {
             position: fixed;
             top: 0;
@@ -254,10 +126,12 @@
             border-bottom: 1px solid transparent;
         }
 
-        nav.scrolled { background: rgba(5,5,5,0.98); padding: 15px 60px; border-bottom: 1px solid rgba(255,51,51,0.3); }
-        
-        .nav-left { display: flex; align-items: center; gap: 40px; }
-        
+        nav.scrolled {
+            background: rgba(5,5,5,0.98);
+            padding: 15px 60px;
+            border-bottom: 1px solid rgba(255,51,51,0.3);
+        }
+
         .logo {
             font-family: 'Oswald', sans-serif;
             font-size: 2.2rem;
@@ -271,18 +145,27 @@
         .logo::after {
             content: '';
             position: absolute;
-            bottom: -5px; left: 0;
-            width: 100%; height: 3px;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
             background: var(--primary);
             transform: scaleX(0);
             transition: transform 0.3s;
             transform-origin: right;
         }
 
-        .logo:hover::after { transform: scaleX(1); transform-origin: left; }
-        
-        .nav-links { display: flex; gap: 50px; list-style: none; }
-        
+        .logo:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 50px;
+            list-style: none;
+        }
+
         .nav-links a {
             color: var(--light);
             text-decoration: none;
@@ -298,15 +181,23 @@
         .nav-links a::before {
             content: '';
             position: absolute;
-            bottom: 0; left: 0;
-            width: 0; height: 2px;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
             background: var(--primary);
             transition: width 0.3s;
         }
 
-        .nav-links a:hover::before { width: 100%; }
-        .nav-links a:hover { color: var(--primary); }
+        .nav-links a:hover::before {
+            width: 100%;
+        }
 
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* HERO SECTION - FULL SCREEN */
         .hero {
             position: relative;
             height: 100vh;
@@ -319,8 +210,10 @@
 
         .hero-bg {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: url('montagne.jpg') center/cover no-repeat;
             animation: kenburns 25s ease-in-out infinite alternate;
             filter: brightness(0.6) contrast(1.2) saturate(0.8);
@@ -333,13 +226,24 @@
 
         .hero-overlay {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.95) 100%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                rgba(0,0,0,0.4) 0%, 
+                rgba(0,0,0,0.2) 40%, 
+                rgba(0,0,0,0.95) 100%);
         }
 
-        .hero-content { position: relative; z-index: 10; text-align: center; max-width: 900px; padding: 0 30px; }
-        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 900px;
+            padding: 0 30px;
+        }
+
         .hero-label {
             display: inline-block;
             padding: 12px 30px;
@@ -369,8 +273,14 @@
             background-clip: text;
         }
 
-        .hero-subtitle { font-size: 1.3rem; letter-spacing: 8px; color: var(--gray); animation: fadeInUp 1s ease-out 0.4s both; font-weight: 300; }
-        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            letter-spacing: 8px;
+            color: var(--gray);
+            animation: fadeInUp 1s ease-out 0.4s both;
+            font-weight: 300;
+        }
+
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
@@ -398,12 +308,27 @@
             50% { transform: translateX(-50%) translateY(15px); }
         }
 
-        section { position: relative; overflow: hidden; }
-        
-        .section-header { text-align: center; margin-bottom: 80px; }
-        
-        .section-label { display: inline-block; color: var(--primary); font-size: 0.9rem; letter-spacing: 6px; text-transform: uppercase; margin-bottom: 20px; font-weight: 600; }
-        
+        /* SECTIONS GÉNÉRALES */
+        section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-label {
+            display: inline-block;
+            color: var(--primary);
+            font-size: 0.9rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
         .section-title {
             font-family: 'Oswald', sans-serif;
             font-size: clamp(2.5rem, 5vw, 4rem);
@@ -416,12 +341,15 @@
         .section-title::after {
             content: '';
             position: absolute;
-            bottom: -20px; left: 50%;
+            bottom: -20px;
+            left: 50%;
             transform: translateX(-50%);
-            width: 80px; height: 4px;
+            width: 80px;
+            height: 4px;
             background: var(--primary);
         }
 
+        /* RÉSEAUX SOCIAUX FIXES */
         .socials-fixed {
             position: fixed;
             right: 40px;
@@ -429,12 +357,13 @@
             transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
             z-index: 999;
         }
 
         .social-link {
-            width: 40px; height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.2);
@@ -442,372 +371,20 @@
             align-items: center;
             justify-content: center;
             color: var(--light);
-            font-size: 1rem;
+            font-size: 1.2rem;
             text-decoration: none;
             transition: var(--transition);
             backdrop-filter: blur(10px);
         }
 
-        .social-link:hover { background: var(--primary); border-color: var(--primary); transform: scale(1.2) translateX(-10px); box-shadow: 0 0 30px rgba(255,51,51,0.4); }
-
-        .social-section {
-            min-height: 60vh;
-            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-            display: flex;
-            align-items: center;
-            padding: 120px 60px;
-            position: relative;
-        }
-
-        .social-container { max-width: 1400px; margin: 0 auto; width: 100%; }
-        .social-header { text-align: center; margin-bottom: 80px; }
-        
-        .social-platforms {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .social-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 25px;
-            padding: 40px 30px;
-            text-align: center;
-            transition: var(--transition);
-            text-decoration: none;
-            color: var(--light);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .social-card:hover { transform: translateY(-15px); border-color: var(--primary); box-shadow: 0 30px 60px rgba(255,51,51,0.2); }
-        .social-card-icon { font-size: 2.5rem; margin-bottom: 20px; display: block; transition: transform 0.4s; }
-        .social-card:hover .social-card-icon { transform: scale(1.2); }
-        .social-card-name { font-family: 'Oswald', sans-serif; font-size: 1.3rem; letter-spacing: 3px; margin-bottom: 10px; text-transform: uppercase; }
-        .social-card-action { font-size: 0.85rem; color: var(--gray); letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; }
-        .social-card:hover .social-card-action { color: var(--primary); }
-        .social-card.instagram:hover { border-color: #E4405F; box-shadow: 0 30px 60px rgba(228,64,95,0.2); }
-        .social-card.instagram .social-card-icon { color: #E4405F; }
-        .social-card.tiktok:hover { border-color: #00f2ea; box-shadow: 0 30px 60px rgba(0,242,234,0.2); }
-        .social-card.tiktok .social-card-icon { color: #00f2ea; }
-        .social-card.facebook:hover { border-color: #1877F2; box-shadow: 0 30px 60px rgba(24,119,242,0.2); }
-        .social-card.facebook .social-card-icon { color: #1877F2; }
-
-        .music-section {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-            display: flex;
-            align-items: center;
-            padding: 120px 60px;
-            position: relative;
-        }
-
-        .music-container { max-width: 1400px; margin: 0 auto; width: 100%; }
-        .music-header { text-align: center; margin-bottom: 80px; }
-        
-        .music-platforms {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .platform-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 30px;
-            padding: 60px 40px;
-            text-align: center;
-            transition: var(--transition);
-            text-decoration: none;
-            color: var(--light);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .platform-card:hover { transform: translateY(-15px); border-color: var(--primary); box-shadow: 0 30px 60px rgba(255,51,51,0.2); }
-        .platform-icon { font-size: 4rem; margin-bottom: 30px; display: block; transition: transform 0.4s; }
-        .platform-card:hover .platform-icon { transform: scale(1.2); }
-        .platform-name { font-family: 'Oswald', sans-serif; font-size: 1.8rem; letter-spacing: 4px; margin-bottom: 15px; text-transform: uppercase; }
-        .platform-action { font-size: 0.9rem; color: var(--gray); letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; }
-        .platform-card:hover .platform-action { color: var(--primary); }
-
-        .album-section {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-            display: flex;
-            align-items: center;
-            padding: 120px 60px;
-            position: relative;
-        }
-
-        .album-container { max-width: 1400px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; }
-        .album-visual { position: relative; }
-        
-        .album-cover-large {
-            width: 100%;
-            max-width: 600px;
-            aspect-ratio: 1;
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
-            transform: perspective(1000px) rotateY(-5deg);
-            transition: var(--transition);
-        }
-
-        .album-cover-large:hover { transform: perspective(1000px) rotateY(0deg); }
-        .album-cover-large img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s; }
-        .album-cover-large:hover img { transform: scale(1.1); }
-        
-        .album-vinyl {
-            position: absolute;
-            top: 50%; right: -80px;
-            transform: translateY(-50%);
-            width: 500px; height: 500px;
-            background: linear-gradient(135deg, #222, #111);
-            border-radius: 50%;
-            z-index: -1;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: spin 4s linear infinite paused;
-        }
-
-        .album-cover-large:hover ~ .album-vinyl, .album-vinyl:hover { animation-play-state: running; }
-        
-        @keyframes spin { from { transform: translateY(-50%) rotate(0deg); } to { transform: translateY(-50%) rotate(360deg); } }
-        
-        .album-vinyl::before { content: ''; width: 150px; height: 150px; background: var(--primary); border-radius: 50%; border: 20px solid #111; }
-        
-        .album-content { padding: 40px 0; }
-        .album-badge { display: inline-block; padding: 8px 20px; background: rgba(255,51,51,0.2); border: 1px solid var(--primary); color: var(--primary); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 30px; border-radius: 30px; }
-        .album-title-large { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 6vw, 5rem); margin-bottom: 20px; letter-spacing: 10px; line-height: 1; }
-        .album-meta { color: var(--gray); font-size: 1.1rem; margin-bottom: 40px; letter-spacing: 2px; }
-        .album-description { font-size: 1.1rem; line-height: 2; color: #aaa; margin-bottom: 50px; max-width: 500px; }
-        .album-actions { display: flex; gap: 20px; flex-wrap: wrap; }
-        
-        .btn-primary {
-            padding: 18px 40px;
+        .social-link:hover {
             background: var(--primary);
-            color: var(--light);
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            border: 2px solid var(--primary);
+            border-color: var(--primary);
+            transform: scale(1.2) translateX(-10px);
+            box-shadow: 0 0 30px rgba(255,51,51,0.4);
         }
 
-        .btn-primary:hover { background: transparent; color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255,51,51,0.3); }
-        
-        .btn-secondary {
-            padding: 18px 40px;
-            background: transparent;
-            color: var(--light);
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            border: 2px solid rgba(255,255,255,0.3);
-        }
-
-        .btn-secondary:hover { border-color: var(--light); background: rgba(255,255,255,0.1); transform: translateY(-3px); }
-
-        .single-section {
-            min-height: 100vh;
-            background: var(--darker);
-            display: flex;
-            align-items: center;
-            padding: 120px 60px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .single-section::before {
-            content: 'FRAPPE';
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-family: 'Oswald', sans-serif;
-            font-size: 20vw;
-            font-weight: 700;
-            color: rgba(255,51,51,0.03);
-            letter-spacing: 50px;
-            white-space: nowrap;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .single-container { max-width: 1400px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; position: relative; z-index: 1; }
-        .single-content { order: 2; text-align: right; }
-        .single-visual { order: 1; }
-        .single-badge { display: inline-block; padding: 10px 30px; background: var(--primary); color: var(--light); font-size: 0.9rem; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 30px; font-weight: 700; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); }
-        .single-title-large { font-family: 'Oswald', sans-serif; font-size: clamp(4rem, 8vw, 7rem); margin-bottom: 20px; letter-spacing: 15px; line-height: 0.9; color: var(--light); text-shadow: 0 0 60px rgba(255,51,51,0.3); }
-        .single-year { font-size: 1.5rem; color: var(--primary); font-weight: 700; letter-spacing: 10px; margin-bottom: 40px; }
-        .single-description { font-size: 1.2rem; line-height: 2; color: #aaa; margin-bottom: 50px; margin-left: auto; max-width: 500px; }
-        .single-actions { display: flex; gap: 20px; justify-content: flex-end; flex-wrap: wrap; }
-        
-        .single-cover-large {
-            width: 100%;
-            max-width: 550px;
-            aspect-ratio: 1;
-            border-radius: 30px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 60px 120px rgba(255,51,51,0.2);
-            transform: perspective(1000px) rotateY(5deg);
-            transition: var(--transition);
-            border: 2px solid rgba(255,51,51,0.3);
-        }
-
-        .single-cover-large:hover { transform: perspective(1000px) rotateY(0deg) scale(1.05); box-shadow: 0 80px 160px rgba(255,51,51,0.3); }
-        .single-cover-large img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s; }
-        .single-cover-large:hover img { transform: scale(1.15); }
-        
-        .now-playing {
-            position: absolute;
-            bottom: 30px; left: 30px; right: 30px;
-            background: rgba(0,0,0,0.9);
-            padding: 20px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,51,51,0.3);
-        }
-
-        .playing-animation { display: flex; gap: 4px; align-items: flex-end; height: 30px; }
-        .bar { width: 4px; background: var(--primary); animation: equalize 1s ease-in-out infinite; }
-        .bar:nth-child(1) { height: 30%; animation-delay: 0s; }
-        .bar:nth-child(2) { height: 70%; animation-delay: 0.2s; }
-        .bar:nth-child(3) { height: 50%; animation-delay: 0.4s; }
-        .bar:nth-child(4) { height: 90%; animation-delay: 0.1s; }
-        
-        @keyframes equalize { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.5); } }
-        
-        .playing-text { font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; }
-
-        .gallery-section { background: linear-gradient(to bottom, #0a0a0a, #111); padding: 120px 60px; }
-        .gallery-header { text-align: center; margin-bottom: 80px; }
-        
-        .gallery-grid-premium {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            grid-auto-rows: 250px;
-            gap: 20px;
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        .gallery-item-premium {
-            position: relative;
-            border-radius: 20px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: var(--transition);
-            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
-        }
-
-        .gallery-item-premium img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s, filter 0.3s; }
-        .gallery-item-premium:hover img { transform: scale(1.15); filter: brightness(1.1); }
-        
-        .gallery-overlay-premium {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 30px;
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-
-        .gallery-item-premium:hover .gallery-overlay-premium { opacity: 1; }
-        .gallery-title { font-family: 'Oswald', sans-serif; font-size: 1.5rem; margin-bottom: 5px; transform: translateY(20px); transition: transform 0.4s; }
-        .gallery-date { color: var(--gray); font-size: 0.9rem; transform: translateY(20px); transition: transform 0.4s 0.1s; }
-        .gallery-item-premium:hover .gallery-title, .gallery-item-premium:hover .gallery-date { transform: translateY(0); }
-
-        .videos-section { background: var(--darker); padding: 120px 60px; }
-        
-        .videos-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            max-width: 1400px; 
-            margin: 0 auto; 
-            gap: 40px; 
-        }
-        
-        .video-card {
-            position: relative;
-            border-radius: 20px;
-            overflow: hidden;
-            background: rgba(255,255,255,0.03);
-            transition: var(--transition);
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .video-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 30px 60px rgba(255,51,51,0.2); }
-        .video-thumbnail { position: relative; height: 250px; overflow: hidden; }
-        .video-thumbnail img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-        .video-card:hover .video-thumbnail img { transform: scale(1.1); }
-        
-        .play-button {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80px; height: 80px;
-            background: rgba(255,51,51,0.9);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: var(--light);
-            transition: var(--transition);
-            border: 4px solid transparent;
-        }
-
-        .video-card:hover .play-button { transform: translate(-50%, -50%) scale(1.2); background: var(--primary); border-color: var(--light); }
-        .video-info { padding: 30px; }
-        .video-title { font-family: 'Oswald', sans-serif; font-size: 1.5rem; margin-bottom: 10px; line-height: 1.3; }
-
-        .bio-section {
-            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-            padding: 120px 60px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bio-container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 400px 1fr; gap: 100px; align-items: start; }
-        .bio-portrait { position: sticky; top: 120px; border-radius: 30px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.1); }
-        .bio-portrait img { width: 100%; height: auto; display: block; transition: transform 0.7s; }
-        .bio-portrait:hover img { transform: scale(1.05); }
-        .bio-content h2 { font-family: 'Oswald', sans-serif; font-size: 3rem; margin-bottom: 10px; letter-spacing: 5px; }
-        .bio-role { color: var(--primary); font-size: 1.2rem; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 40px; font-weight: 600; }
-        .bio-text { font-size: 1.1rem; line-height: 2.2; color: #bbb; margin-bottom: 30px; text-align: justify; }
-        .bio-text strong { color: var(--light); font-weight: 600; }
-        .bio-tags { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 40px; }
-        .bio-tag { padding: 12px 25px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 30px; font-size: 0.9rem; color: var(--light); transition: var(--transition); cursor: default; }
-        .bio-tag:hover { background: var(--primary); border-color: var(--primary); transform: translateY(-3px); }
-
+        /* SECTION TOURNÉE - DATE CLIGNOTANTE */
         .tour-section {
             background: var(--darker);
             padding: 120px 60px;
@@ -818,8 +395,11 @@
             justify-content: center;
         }
 
-        .tour-content { text-align: center; max-width: 800px; }
-        
+        .tour-content {
+            text-align: center;
+            max-width: 800px;
+        }
+
         .tour-date-blinking {
             text-align: center;
             padding: 60px 80px;
@@ -859,10 +439,809 @@
             letter-spacing: 12px;
         }
 
-        .tour-icon { font-size: 5rem; color: var(--primary); margin-bottom: 30px; opacity: 0.5; }
-        .tour-text { font-size: 1.5rem; color: var(--gray); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px; }
-        .tour-subtext { color: #666; font-size: 1.1rem; }
+        .tour-icon {
+            font-size: 5rem;
+            color: var(--primary);
+            margin-bottom: 30px;
+            opacity: 0.5;
+        }
 
+        /* SECTION MUSIQUE - PLATEFORMES */
+        .music-section {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            display: flex;
+            align-items: center;
+            padding: 120px 60px;
+            position: relative;
+        }
+
+        .music-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('noise.png') repeat;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .music-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .music-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .music-platforms {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .platform-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 30px;
+            padding: 60px 40px;
+            text-align: center;
+            transition: var(--transition);
+            text-decoration: none;
+            color: var(--light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .platform-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(255,51,51,0.1));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .platform-card:hover::before {
+            opacity: 1;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--primary);
+            box-shadow: 0 30px 60px rgba(255,51,51,0.2);
+        }
+
+        .platform-icon {
+            font-size: 4rem;
+            margin-bottom: 30px;
+            display: block;
+            transition: transform 0.4s;
+        }
+
+        .platform-card:hover .platform-icon {
+            transform: scale(1.2);
+        }
+
+        .platform-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .platform-action {
+            font-size: 0.9rem;
+            color: var(--gray);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .platform-card:hover .platform-action {
+            color: var(--primary);
+        }
+
+        /* SECTION ALBUM TIME - INDÉPENDANTE */
+        .album-section {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            display: flex;
+            align-items: center;
+            padding: 120px 60px;
+            position: relative;
+        }
+
+        .album-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('noise.png') repeat;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .album-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+            align-items: center;
+        }
+
+        .album-visual {
+            position: relative;
+        }
+
+        .album-cover-large {
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 1;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+            transform: perspective(1000px) rotateY(-5deg);
+            transition: var(--transition);
+        }
+
+        .album-cover-large:hover {
+            transform: perspective(1000px) rotateY(0deg) scale(1.02);
+        }
+
+        .album-cover-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s;
+        }
+
+        .album-cover-large:hover img {
+            transform: scale(1.1);
+        }
+
+        .album-vinyl {
+            position: absolute;
+            top: 50%;
+            right: -80px;
+            transform: translateY(-50%);
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, #222, #111);
+            border-radius: 50%;
+            z-index: -1;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spin 4s linear infinite paused;
+        }
+
+        .album-cover-large:hover ~ .album-vinyl,
+        .album-vinyl:hover {
+            animation-play-state: running;
+        }
+
+        @keyframes spin {
+            from { transform: translateY(-50%) rotate(0deg); }
+            to { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .album-vinyl::before {
+            content: '';
+            width: 150px;
+            height: 150px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 20px solid #111;
+        }
+
+        .album-content {
+            padding: 40px 0;
+        }
+
+        .album-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(255,51,51,0.2);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            border-radius: 30px;
+        }
+
+        .album-title-large {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            margin-bottom: 20px;
+            letter-spacing: 10px;
+            line-height: 1;
+        }
+
+        .album-meta {
+            color: var(--gray);
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+        }
+
+        .album-description {
+            font-size: 1.1rem;
+            line-height: 2;
+            color: #aaa;
+            margin-bottom: 50px;
+            max-width: 500px;
+        }
+
+        .album-actions {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            padding: 18px 40px;
+            background: var(--primary);
+            color: var(--light);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 2px solid var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255,51,51,0.3);
+        }
+
+        .btn-secondary {
+            padding: 18px 40px;
+            background: transparent;
+            color: var(--light);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--light);
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-3px);
+        }
+
+        /* SECTION SINGLE FRAPPE - INDÉPENDANTE */
+        .single-section {
+            min-height: 100vh;
+            background: var(--darker);
+            display: flex;
+            align-items: center;
+            padding: 120px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .single-section::before {
+            content: 'FRAPPE';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Oswald', sans-serif;
+            font-size: 20vw;
+            font-weight: 700;
+            color: rgba(255,51,51,0.03);
+            letter-spacing: 50px;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .single-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .single-content {
+            order: 2;
+            text-align: right;
+        }
+
+        .single-visual {
+            order: 1;
+        }
+
+        .single-badge {
+            display: inline-block;
+            padding: 10px 30px;
+            background: var(--primary);
+            color: var(--light);
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            font-weight: 700;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+        }
+
+        .single-title-large {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(4rem, 8vw, 7rem);
+            margin-bottom: 20px;
+            letter-spacing: 15px;
+            line-height: 0.9;
+            color: var(--light);
+            text-shadow: 0 0 60px rgba(255,51,51,0.3);
+        }
+
+        .single-year {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: 10px;
+            margin-bottom: 40px;
+        }
+
+        .single-description {
+            font-size: 1.2rem;
+            line-height: 2;
+            color: #aaa;
+            margin-bottom: 50px;
+            margin-left: auto;
+            max-width: 500px;
+        }
+
+        .single-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .single-cover-large {
+            width: 100%;
+            max-width: 550px;
+            aspect-ratio: 1;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 60px 120px rgba(255,51,51,0.2);
+            transform: perspective(1000px) rotateY(5deg);
+            transition: var(--transition);
+            border: 2px solid rgba(255,51,51,0.3);
+        }
+
+        .single-cover-large:hover {
+            transform: perspective(1000px) rotateY(0deg) scale(1.05);
+            box-shadow: 0 80px 160px rgba(255,51,51,0.3);
+        }
+
+        .single-cover-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s;
+        }
+
+        .single-cover-large:hover img {
+            transform: scale(1.15);
+        }
+
+        .now-playing {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            background: rgba(0,0,0,0.9);
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,51,51,0.3);
+        }
+
+        .playing-animation {
+            display: flex;
+            gap: 4px;
+            align-items: flex-end;
+            height: 30px;
+        }
+
+        .bar {
+            width: 4px;
+            background: var(--primary);
+            animation: equalize 1s ease-in-out infinite;
+        }
+
+        .bar:nth-child(1) { height: 30%; animation-delay: 0s; }
+        .bar:nth-child(2) { height: 70%; animation-delay: 0.2s; }
+        .bar:nth-child(3) { height: 50%; animation-delay: 0.4s; }
+        .bar:nth-child(4) { height: 90%; animation-delay: 0.1s; }
+
+        @keyframes equalize {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.5); }
+        }
+
+        .playing-text {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* SECTION BIO */
+        .bio-section {
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            padding: 120px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bio-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255,51,51,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .bio-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 100px;
+            align-items: start;
+        }
+
+        .bio-portrait {
+            position: sticky;
+            top: 120px;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .bio-portrait img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.7s;
+        }
+
+        .bio-portrait:hover img {
+            transform: scale(1.05);
+        }
+
+        .bio-content h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            letter-spacing: 5px;
+        }
+
+        .bio-role {
+            color: var(--primary);
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            font-weight: 600;
+        }
+
+        .bio-text {
+            font-size: 1.1rem;
+            line-height: 2.2;
+            color: #bbb;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+
+        .bio-text strong {
+            color: var(--light);
+            font-weight: 600;
+        }
+
+        .bio-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .bio-tag {
+            padding: 12px 25px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: var(--light);
+            transition: var(--transition);
+            cursor: default;
+        }
+
+        .bio-tag:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* SECTION RÉSEAUX SOCIAUX */
+        .social-section {
+            min-height: 60vh;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            display: flex;
+            align-items: center;
+            padding: 120px 60px;
+            position: relative;
+        }
+
+        .social-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .social-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .social-platforms {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .social-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: var(--transition);
+            text-decoration: none;
+            color: var(--light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--primary);
+            box-shadow: 0 30px 60px rgba(255,51,51,0.2);
+        }
+
+        .social-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: block;
+            transition: transform 0.4s;
+        }
+
+        .social-card:hover .social-card-icon {
+            transform: scale(1.2);
+        }
+
+        .social-card-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .social-card-action {
+            font-size: 0.85rem;
+            color: var(--gray);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .social-card:hover .social-card-action {
+            color: var(--primary);
+        }
+
+        .social-card.instagram:hover {
+            border-color: #E4405F;
+            box-shadow: 0 30px 60px rgba(228,64,95,0.2);
+        }
+
+        .social-card.instagram .social-card-icon {
+            color: #E4405F;
+        }
+
+        .social-card.tiktok:hover {
+            border-color: #00f2ea;
+            box-shadow: 0 30px 60px rgba(0,242,234,0.2);
+        }
+
+        .social-card.tiktok .social-card-icon {
+            color: #00f2ea;
+        }
+
+        .social-card.facebook:hover {
+            border-color: #1877F2;
+            box-shadow: 0 30px 60px rgba(24,119,242,0.2);
+        }
+
+        .social-card.facebook .social-card-icon {
+            color: #1877F2;
+        }
+
+        /* SECTION VIDÉOS - 5 VIDÉOS SANS VUES */
+        .videos-section {
+            background: var(--darker);
+            padding: 120px 60px;
+        }
+
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .video-card {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.03);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 30px 60px rgba(255,51,51,0.2);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .video-card:hover .video-thumbnail img {
+            transform: scale(1.1);
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(255,51,51,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--light);
+            transition: var(--transition);
+            border: 4px solid transparent;
+        }
+
+        .video-card:hover .play-button {
+            transform: translate(-50%, -50%) scale(1.2);
+            background: var(--primary);
+            border-color: var(--light);
+        }
+
+        .video-info {
+            padding: 30px;
+        }
+
+        .video-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        /* SECTION GALERIE PHOTOS - 20 PHOTOS */
+        .gallery-section {
+            background: linear-gradient(to bottom, #0a0a0a, #111);
+            padding: 120px 60px;
+        }
+
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .gallery-grid-premium {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-auto-rows: 250px;
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .gallery-item-premium {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+        }
+
+        .gallery-item-premium img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s, filter 0.3s;
+        }
+
+        .gallery-item-premium:hover img {
+            transform: scale(1.15);
+            filter: brightness(1.1);
+        }
+
+        /* NEWSLETTER SECTION */
         .newsletter-section {
             background: linear-gradient(to bottom, var(--darker), #000);
             padding: 150px 60px;
@@ -871,11 +1250,41 @@
             overflow: hidden;
         }
 
-        .newsletter-content { max-width: 700px; margin: 0 auto; }
-        .newsletter-title { font-family: 'Oswald', sans-serif; font-size: 3rem; margin-bottom: 20px; letter-spacing: 5px; }
-        .newsletter-subtitle { color: var(--gray); font-size: 1.2rem; margin-bottom: 50px; line-height: 1.8; }
-        .newsletter-form-premium { display: flex; gap: 20px; margin-bottom: 30px; }
-        
+        .newsletter-section::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
+        }
+
+        .newsletter-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .newsletter-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            letter-spacing: 5px;
+        }
+
+        .newsletter-subtitle {
+            color: var(--gray);
+            font-size: 1.2rem;
+            margin-bottom: 50px;
+            line-height: 1.8;
+        }
+
+        .newsletter-form-premium {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
         .newsletter-input-premium {
             flex: 1;
             padding: 25px 35px;
@@ -888,8 +1297,11 @@
             transition: var(--transition);
         }
 
-        .newsletter-input-premium:focus { border-color: var(--primary); background: rgba(255,255,255,0.1); }
-        
+        .newsletter-input-premium:focus {
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.1);
+        }
+
         .newsletter-btn-premium {
             padding: 25px 50px;
             background: var(--primary);
@@ -904,188 +1316,437 @@
             transition: var(--transition);
         }
 
-        .newsletter-btn-premium:hover { background: transparent; color: var(--primary); transform: scale(1.05); }
-        .newsletter-guarantee { color: #666; font-size: 0.9rem; }
+        .newsletter-btn-premium:hover {
+            background: transparent;
+            color: var(--primary);
+            transform: scale(1.05);
+        }
 
-        footer { background: #000; padding: 80px 60px 40px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .footer-content { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
-        .footer-brand { font-family: 'Oswald', sans-serif; font-size: 3rem; letter-spacing: 10px; margin-bottom: 20px; }
-        .footer-tagline { color: var(--gray); line-height: 1.8; max-width: 300px; }
-        .footer-title { font-size: 1rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 25px; color: var(--light); font-weight: 600; }
-        .footer-links { list-style: none; }
-        .footer-links li { margin-bottom: 15px; }
-        .footer-links a { color: var(--gray); text-decoration: none; transition: color 0.3s; font-size: 0.95rem; }
-        .footer-links a:hover { color: var(--primary); }
-        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px; display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; color: #666; font-size: 0.9rem; }
-        .footer-socials { display: flex; gap: 20px; }
-        .footer-socials a { color: var(--gray); font-size: 1.3rem; transition: color 0.3s; }
-        .footer-socials a:hover { color: var(--primary); }
+        .newsletter-guarantee {
+            color: #666;
+            font-size: 0.9rem;
+        }
 
-        .manager-contact { margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
-        .manager-toggle { display: flex; align-items: center; gap: 10px; color: var(--primary); cursor: pointer; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem; transition: var(--transition); }
-        .manager-toggle:hover { color: var(--light); }
-        .manager-toggle i { transition: transform 0.3s; }
-        .manager-toggle.active i { transform: rotate(180deg); }
-        .manager-info { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, padding 0.4s; }
-        .manager-info.active { max-height: 200px; padding-top: 20px; }
-        .manager-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; color: var(--gray); font-size: 0.95rem; }
-        .manager-item:last-child { margin-bottom: 0; }
-        .manager-item i { color: var(--primary); width: 20px; }
-        .manager-item a { color: var(--gray); text-decoration: none; transition: color 0.3s; }
-        .manager-item a:hover { color: var(--primary); }
+        /* FOOTER */
+        footer {
+            background: #000;
+            padding: 80px 60px 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
 
-        .lightbox-premium { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 10000; display: none; opacity: 0; transition: opacity 0.4s; }
-        .lightbox-premium.active { display: flex; opacity: 1; align-items: center; justify-content: center; }
-        .lightbox-img-premium { max-width: 90%; max-height: 90%; border-radius: 10px; box-shadow: 0 50px 100px rgba(0,0,0,0.8); transform: scale(0.9); transition: transform 0.4s; }
-        .lightbox-premium.active .lightbox-img-premium { transform: scale(1); }
-        .lightbox-close-premium { position: absolute; top: 40px; right: 40px; width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; color: var(--light); font-size: 1.5rem; cursor: pointer; transition: var(--transition); border: 1px solid rgba(255,255,255,0.2); }
-        .lightbox-close-premium:hover { background: var(--primary); border-color: var(--primary); transform: rotate(90deg); }
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
 
-        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+        .footer-brand {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            letter-spacing: 10px;
+            margin-bottom: 20px;
+        }
 
+        .footer-tagline {
+            color: var(--gray);
+            line-height: 1.8;
+            max-width: 300px;
+        }
+
+        .footer-title {
+            font-size: 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            color: var(--light);
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-socials a {
+            color: var(--gray);
+            font-size: 1.3rem;
+            transition: color 0.3s;
+        }
+
+        .footer-socials a:hover {
+            color: var(--primary);
+        }
+
+        /* MANAGER CONTACT */
+        .manager-contact {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .manager-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .manager-toggle:hover {
+            color: var(--light);
+        }
+
+        .manager-toggle i {
+            transition: transform 0.3s;
+        }
+
+        .manager-toggle.active i {
+            transform: rotate(180deg);
+        }
+
+        .manager-info {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s;
+        }
+
+        .manager-info.active {
+            max-height: 200px;
+            padding-top: 20px;
+        }
+
+        .manager-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .manager-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .manager-item i {
+            color: var(--primary);
+            width: 20px;
+        }
+
+        .manager-item a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .manager-item a:hover {
+            color: var(--primary);
+        }
+
+        /* LIGHTBOX AMÉLIORÉ */
+        .lightbox-premium {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.98);
+            z-index: 10000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .lightbox-premium.active {
+            display: flex;
+            opacity: 1;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-img-premium {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+            transform: scale(0.9);
+            transition: transform 0.4s;
+        }
+
+        .lightbox-premium.active .lightbox-img-premium {
+            transform: scale(1);
+        }
+
+        .lightbox-close-premium {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .lightbox-close-premium:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        /* ANIMATIONS SCROLL */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* RESPONSIVE */
         @media (max-width: 1200px) {
-            .nav-left { gap: 20px; }
-            .nav-links { gap: 30px; }
-            .language-selector { margin-left: 15px; }
-            .social-platforms { grid-template-columns: 1fr; max-width: 350px; }
-            .music-platforms { grid-template-columns: 1fr; max-width: 400px; }
-            .album-container, .single-container, .bio-container { grid-template-columns: 1fr; gap: 60px; }
-            .single-content { order: 1; text-align: left; }
-            .single-visual { order: 2; }
-            .single-actions { justify-content: flex-start; }
-            .single-description { margin-left: 0; }
-            .bio-portrait { position: relative; top: 0; max-width: 400px; margin: 0 auto; }
-            .gallery-grid-premium { grid-template-columns: repeat(2, 1fr); }
-            .videos-grid { grid-template-columns: 1fr; }
-            .footer-content { grid-template-columns: 1fr 1fr; }
-            .date-badge { font-size: 3rem; }
-            .venue-name { font-size: 1.8rem; }
+            .music-platforms {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+            
+            .album-container,
+            .single-container,
+            .bio-container {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+            
+            .single-content {
+                order: 1;
+                text-align: left;
+            }
+            
+            .single-visual {
+                order: 2;
+            }
+            
+            .single-actions {
+                justify-content: flex-start;
+            }
+            
+            .single-description {
+                margin-left: 0;
+            }
+            
+            .bio-portrait {
+                position: relative;
+                top: 0;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+            
+            .gallery-grid-premium {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .videos-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .social-platforms {
+                grid-template-columns: 1fr;
+                max-width: 350px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .date-badge {
+                font-size: 3rem;
+            }
+            
+            .venue-name {
+                font-size: 1.8rem;
+            }
         }
 
         @media (max-width: 768px) {
-            nav { padding: 20px 30px; }
-            .nav-left { gap: 15px; }
-            .nav-links { display: none; }
-            .language-selector { margin-left: 10px; }
-            .lang-toggle { padding: 8px 15px; font-size: 0.8rem; }
-            .lang-menu { right: -50px; }
-            .socials-fixed { display: none; }
-            .social-section, .music-section, .album-section, .single-section, .gallery-section, .videos-section, .bio-section, .tour-section, .newsletter-section { padding: 80px 30px; }
-            .album-vinyl { display: none; }
-            .gallery-grid-premium { grid-template-columns: 1fr; }
-            .newsletter-form-premium { flex-direction: column; }
-            .footer-content { grid-template-columns: 1fr; text-align: center; }
-            .manager-contact { text-align: left; }
-            .footer-tagline { max-width: 100%; }
-            .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
-            .hero-title { letter-spacing: 10px; }
-            .start-logo { font-size: 5rem; letter-spacing: 10px; }
-            .start-btn { padding: 20px 50px; font-size: 1rem; letter-spacing: 5px; }
-            .date-badge { font-size: 2rem; letter-spacing: 4px; }
-            .venue-name { font-size: 1.3rem; letter-spacing: 6px; }
-            .tour-date-blinking { padding: 40px 30px; }
+            nav {
+                padding: 20px 30px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .socials-fixed {
+                display: none;
+            }
+            
+            .music-section,
+            .album-section,
+            .single-section,
+            .gallery-section,
+            .videos-section,
+            .bio-section,
+            .tour-section,
+            .social-section,
+            .newsletter-section {
+                padding: 80px 30px;
+            }
+            
+            .album-vinyl {
+                display: none;
+            }
+            
+            .gallery-grid-premium {
+                grid-template-columns: 1fr;
+            }
+            
+            .newsletter-form-premium {
+                flex-direction: column;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .manager-contact {
+                text-align: left;
+            }
+            
+            .footer-tagline {
+                max-width: 100%;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .hero-title {
+                letter-spacing: 10px;
+            }
+            
+            .date-badge {
+                font-size: 2rem;
+                letter-spacing: 4px;
+            }
+            
+            .venue-name {
+                font-size: 1.3rem;
+                letter-spacing: 6px;
+            }
+            
+            .tour-date-blinking {
+                padding: 40px 30px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <audio id="welcomeJingle" preload="auto">
+    <!-- AUDIO -->
+    <audio id="welcomeJingle">
         <source src="jingle.mp3" type="audio/mpeg">
-        <source src="jingle.ogg" type="audio/ogg">
-        Votre navigateur ne supporte pas l'audio.
     </audio>
 
-    <div class="particle-container" id="particleContainer"></div>
-
-    <div class="space-overlay" id="spaceOverlay">
-        <div class="stars-container" id="starsContainer"></div>
-        <div class="speed-lines" id="speedLines"></div>
-        <div class="start-logo" id="startLogo">IK</div>
-        <button class="start-btn" id="startBtn" onclick="startSpaceJourney()" data-i18n="enter">Entrer dans l'univers</button>
+    <!-- OVERLAY DÉMARRAGE -->
+    <div class="start-overlay" id="startOverlay">
+        <div class="start-logo">IK</div>
+        <button class="start-btn" onclick="startExperience()">Entrer dans l'univers</button>
     </div>
 
+    <!-- NAVIGATION -->
     <nav id="navbar">
-        <div class="nav-left">
-            <a href="#" class="logo">IK</a>
-            <ul class="nav-links">
-                <li><a href="#single">FRAPPE</a></li>
-                <li><a href="#tour">Tournée</a></li>
-                <li><a href="#music">Musiques</a></li>
-                <li><a href="#bio">Biographie</a></li>
-                <li><a href="#social">Réseaux</a></li>
-                <li><a href="#videos">Vidéos</a></li>
-                <li><a href="#gallery">Photos</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-        
-        <div class="language-selector">
-            <div class="lang-dropdown">
-                <button class="lang-toggle" id="langToggle">
-                    <span class="lang-flag" id="currentFlag">🇫🇷</span>
-                    <span id="currentLang">FR</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="lang-menu">
-                    <div class="lang-option active" onclick="changeLanguage('fr')">
-                        <span class="lang-flag">🇫🇷</span>
-                        <span>Français</span>
-                    </div>
-                    <div class="lang-option" onclick="changeLanguage('en')">
-                        <span class="lang-flag">🇬🇧</span>
-                        <span>English</span>
-                    </div>
-                    <div class="lang-option" onclick="changeLanguage('it')">
-                        <span class="lang-flag">🇮🇹</span>
-                        <span>Italiano</span>
-                    </div>
-                    <div class="lang-option" onclick="changeLanguage('de')">
-                        <span class="lang-flag">🇩🇪</span>
-                        <span>Deutsch</span>
-                    </div>
-                    <div class="lang-option" onclick="changeLanguage('pt')">
-                        <span class="lang-flag">🇵🇹</span>
-                        <span>Português</span>
-                    </div>
-                    <div class="lang-option" onclick="changeLanguage('es')">
-                        <span class="lang-flag">🇪🇸</span>
-                        <span>Español</span>
-                    </div>
-                    <div class="lang-option" onclick="changeLanguage('ln')">
-                        <span class="lang-flag">🇨🇩</span>
-                        <span>Lingala</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <a href="#" class="logo">IK</a>
+        <ul class="nav-links">
+            <li><a href="#single">FRAPPE</a></li>
+            <li><a href="#tour">Tournée</a></li>
+            <li><a href="#music">Musiques</a></li>
+            <li><a href="#bio">Biographie</a></li>
+            <li><a href="#social">Réseaux</a></li>
+            <li><a href="#videos">Vidéos</a></li>
+            <li><a href="#gallery">Photos</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
     </nav>
 
+    <!-- RÉSEAUX SOCIAUX -->
     <div class="socials-fixed">
-        <a href="https://www.instagram.com/ik_ivk" class="social-link" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/@ik_ivk" class="social-link" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
-        <a href="https://open.spotify.com/intl-fr/artist/2kmNQg4mFn7bwFFYLn4A1W" class="social-link" target="_blank" title="Spotify"><i class="fab fa-spotify"></i></a>
-        <a href="https://music.apple.com/ch/artist/ik/1643363794" class="social-link" target="_blank" title="Apple Music"><i class="fab fa-apple"></i></a>
-        <a href="https://on.soundcloud.com/svhi5POoamp8Ps9bJZ" class="social-link" target="_blank" title="SoundCloud"><i class="fab fa-soundcloud"></i></a>
-        <a href="#" class="social-link" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://www.instagram.com/ik_ivk" class="social-link" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@ik_ivk" class="social-link" target="_blank"><i class="fab fa-tiktok"></i></a>
+        <a href="https://open.spotify.com/intl-fr/artist/2kmNQg4mFn7bwFFYLn4A1W" class="social-link" target="_blank"><i class="fab fa-spotify"></i></a>
+        <a href="https://music.apple.com/ch/artist/ik/1643363794" class="social-link" target="_blank"><i class="fab fa-apple"></i></a>
+        <a href="https://on.soundcloud.com/svhi5POoamp8Ps9bJZ" class="social-link" target="_blank"><i class="fab fa-soundcloud"></i></a>
+        <a href="#" class="social-link" target="_blank"><i class="fab fa-youtube"></i></a>
     </div>
 
+    <!-- HERO -->
     <section class="hero">
         <div class="hero-bg"></div>
         <div class="hero-overlay"></div>
         
         <div class="hero-content">
-            <div class="hero-label" data-i18n="hero_label">Nouveau Single</div>
+            <div class="hero-label">Nouveau Single</div>
             <h1 class="hero-title">FRAPPE</h1>
-            <p class="hero-subtitle" data-i18n="hero_subtitle">Disponible sur toutes les plateformes</p>
+            <p class="hero-subtitle">Disponible sur toutes les plateformes</p>
         </div>
 
         <div class="scroll-indicator" onclick="document.getElementById('tour').scrollIntoView({behavior: 'smooth'})">
-            <span data-i18n="discover">Découvrir</span>
+            <span>Découvrir</span>
             <i class="fas fa-chevron-down"></i>
         </div>
     </section>
 
+    <!-- SECTION TOURNÉE - 2 AVRIL 2026 CLIGNOTANT -->
     <section class="tour-section" id="tour">
         <div class="tour-content reveal">
             <i class="fas fa-microphone-alt tour-icon"></i>
@@ -1102,35 +1763,37 @@
         </div>
     </section>
 
+    <!-- SECTION MUSIQUE - PLATEFORMES STREAMING -->
     <section class="music-section" id="music">
         <div class="music-container">
             <div class="music-header reveal">
-                <div class="section-label" data-i18n="streaming">Streaming</div>
-                <h2 class="section-title" data-i18n="music">Musiques</h2>
+                <div class="section-label">Streaming</div>
+                <h2 class="section-title">Musiques</h2>
             </div>
             
             <div class="music-platforms">
-                <a href="https://open.spotify.com/intl-fr/album/5GW1zPmqFqcBNNXk5I48sH?si=-WbyMzARSgKTYdv8MrCE1g" class="platform-card reveal" target="_blank">
+                <a href="https://open.spotify.com/intl-fr/artist/2kmNQg4mFn7bwFFYLn4A1W" class="platform-card reveal" target="_blank">
                     <i class="fab fa-spotify platform-icon" style="color: #1DB954;"></i>
                     <h3 class="platform-name">Spotify</h3>
-                    <p class="platform-action" data-i18n="listen_now">Écouter maintenant</p>
+                    <p class="platform-action">Écouter maintenant</p>
                 </a>
                 
                 <a href="https://music.apple.com/ch/artist/ik/1643363794" class="platform-card reveal" target="_blank">
                     <i class="fab fa-apple platform-icon" style="color: #FA243C;"></i>
                     <h3 class="platform-name">Apple Music</h3>
-                    <p class="platform-action" data-i18n="listen_now">Écouter maintenant</p>
+                    <p class="platform-action">Écouter maintenant</p>
                 </a>
                 
                 <a href="https://on.soundcloud.com/svhi5POoamp8Ps9bJZ" class="platform-card reveal" target="_blank">
                     <i class="fab fa-soundcloud platform-icon" style="color: #FF5500;"></i>
                     <h3 class="platform-name">SoundCloud</h3>
-                    <p class="platform-action" data-i18n="listen_now">Écouter maintenant</p>
+                    <p class="platform-action">Écouter maintenant</p>
                 </a>
             </div>
         </div>
     </section>
 
+    <!-- SECTION ALBUM TIME -->
     <section class="album-section" id="album">
         <div class="album-container">
             <div class="album-visual reveal">
@@ -1141,46 +1804,44 @@
             </div>
             
             <div class="album-content reveal">
-                <div class="album-badge" data-i18n="album_badge">Album • 2024</div>
+                <div class="album-badge">Album • 2024</div>
                 <h2 class="album-title-large">TIME</h2>
-                <div class="album-meta" data-i18n="album_meta">10 titres • 45 minutes</div>
-                <p class="album-description" data-i18n="album_desc">
+                <div class="album-meta">10 titres • 45 minutes</div>
+                <p class="album-description">
                     Un voyage musical à travers le temps et les émotions. TIME marque une évolution 
                     artistique majeure, mêlant influences africaines et sonorités européennes dans 
                     une production raffinée et contemporaine.
                 </p>
                 <div class="album-actions">
-                    <a href="https://open.spotify.com/intl-fr/album/1MNW3dNKnPKYt2o2qtdGu0?si=EBUGj0AcSbORr3uf6dQf-A" class="btn-primary" target="_blank">
-                        <i class="fab fa-spotify"></i> Spotify
+                    <a href="https://open.spotify.com" class="btn-primary" target="_blank">
+                        <i class="fab fa-spotify"></i> Écouter sur Spotify
                     </a>
-                    <a href="https://music.apple.com/ch/album/time/1783268150?l=fr-FR" class="btn-secondary" target="_blank">
+                    <a href="https://music.apple.com" class="btn-secondary" target="_blank">
                         <i class="fab fa-apple"></i> Apple Music
-                    </a>
-                    <a href="https://on.soundcloud.com/vzBpyxwpPdUJmlOtYL" class="btn-secondary" target="_blank">
-                        <i class="fab fa-soundcloud"></i> SoundCloud
                     </a>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- SECTION SINGLE FRAPPE -->
     <section class="single-section" id="single">
         <div class="single-container">
             <div class="single-content reveal">
-                <div class="single-badge" data-i18n="new_single">Nouveau Single</div>
+                <div class="single-badge">Nouveau Single</div>
                 <h2 class="single-title-large">FRAPPE</h2>
                 <div class="single-year">2026</div>
-                <p class="single-description" data-i18n="single_desc">
+                <p class="single-description">
                     Le nouveau single qui marque un tournant. Une production explosive 
                     qui révèle toute l'énergie et la passion d'IK. Disponible maintenant 
                     sur toutes les plateformes de streaming.
                 </p>
                 <div class="single-actions">
-                    <a href="https://open.spotify.com/intl-fr/album/5GW1zPmqFqcBNNXk5I48sH?si=-WbyMzARSgKTYdv8MrCE1g" class="btn-primary" target="_blank">
-                        <i class="fas fa-play"></i> <span data-i18n="listen">Écouter</span>
+                    <a href="https://open.spotify.com" class="btn-primary" target="_blank">
+                        <i class="fas fa-play"></i> Écouter
                     </a>
                     <a href="https://youtube.com" class="btn-secondary" target="_blank">
-                        <i class="fab fa-youtube"></i> <span data-i18n="watch_clip">Voir le clip</span>
+                        <i class="fab fa-youtube"></i> Voir le clip
                     </a>
                 </div>
             </div>
@@ -1195,39 +1856,40 @@
                             <div class="bar"></div>
                             <div class="bar"></div>
                         </div>
-                        <span class="playing-text" data-i18n="now_available">Maintenant disponible</span>
+                        <span class="playing-text">Maintenant disponible</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- SECTION BIO -->
     <section class="bio-section" id="bio">
         <div class="bio-container">
             <div class="bio-portrait reveal">
-                <img src="bio-photo.jpg" alt="Ivan Kandu" onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:600px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);color:#666;font-size:1.2rem;text-align:center;padding:40px;\' data-i18n=\'add_photo\'>Ajoute ta photo ici<br>(bio-photo.jpg)</div>'">
+                <img src="bio-photo.jpg" alt="Ivan Kandu" onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:600px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);color:#666;font-size:1.2rem;text-align:center;padding:40px;\'>Ajoute ta photo ici<br>(bio-photo.jpg)</div>'">
             </div>
             
             <div class="bio-content reveal">
                 <h2>Ivan Kandu</h2>
-                <div class="bio-role" data-i18n="bio_role">Artiste • Chanteur • Compositeur</div>
+                <div class="bio-role">Artiste • Chanteur • Compositeur</div>
                 
-                <p class="bio-text" data-i18n="bio_text1">
+                <p class="bio-text">
                     Né le 12 janvier 1993 en République démocratique du Congo, <strong>Ivan Kandu</strong> est un artiste suisse au parcours vibrant et multiculturel. Arrivé en Suisse en 2006, il grandit entre le Tessin et le canton de Vaud, où il forge son identité artistique unique.
                 </p>
                 
-                <p class="bio-text" data-i18n="bio_text2">
+                <p class="bio-text">
                     Son histoire avec la musique commence très tôt : à seulement 10 ans, il devient la voix solo et le leader de la chorale « Les Anges du Seigneur ». Cette première scène révèle déjà une présence naturelle et une puissance vocale remarquable.
                 </p>
                 
-                <p class="bio-text" data-i18n="bio_text3">
+                <p class="bio-text">
                     Influencé par le <strong>RnB</strong>, la <strong>Rumba</strong>, la <strong>Pop</strong> et l'<strong>Afropop</strong>, Ivan se fait connaître grâce à ses reprises sur YouTube avant de passer à la création originale. Il écrit et compose en français, italien, lingala et anglais.
                 </p>
 
                 <div class="bio-tags">
                     <span class="bio-tag">RnB</span>
-                    <span class="bio-tag" data-i18n="tag_rumba">Rumba Congolaise</span>
-                    <span class="bio-tag" data-i18n="tag_pop">Pop Africaine</span>
+                    <span class="bio-tag">Rumba Congolaise</span>
+                    <span class="bio-tag">Pop Africaine</span>
                     <span class="bio-tag">Afropop</span>
                     <span class="bio-tag">Soul</span>
                 </div>
@@ -1235,45 +1897,47 @@
         </div>
     </section>
 
+    <!-- SECTION RÉSEAUX SOCIAUX -->
     <section class="social-section" id="social">
         <div class="social-container">
             <div class="social-header reveal">
-                <div class="section-label" data-i18n="follow_me">Suivez-moi</div>
-                <h2 class="section-title" data-i18n="social_networks">Réseaux Sociaux</h2>
+                <div class="section-label">Suivez-moi</div>
+                <h2 class="section-title">Réseaux Sociaux</h2>
             </div>
             
             <div class="social-platforms">
                 <a href="https://www.instagram.com/ik_ivk" class="social-card instagram reveal" target="_blank">
                     <i class="fab fa-instagram social-card-icon"></i>
                     <h3 class="social-card-name">Instagram</h3>
-                    <p class="social-card-action" data-i18n="follow">Suivre</p>
+                    <p class="social-card-action">Suivre</p>
                 </a>
                 
                 <a href="https://www.tiktok.com/@ik_ivk" class="social-card tiktok reveal" target="_blank">
                     <i class="fab fa-tiktok social-card-icon"></i>
                     <h3 class="social-card-name">TikTok</h3>
-                    <p class="social-card-action" data-i18n="follow">Suivre</p>
+                    <p class="social-card-action">Suivre</p>
                 </a>
                 
                 <a href="#" class="social-card facebook reveal" target="_blank">
                     <i class="fab fa-facebook-f social-card-icon"></i>
                     <h3 class="social-card-name">Facebook</h3>
-                    <p class="social-card-action" data-i18n="follow">Suivre</p>
+                    <p class="social-card-action">Suivre</p>
                 </a>
             </div>
         </div>
     </section>
 
+    <!-- SECTION VIDÉOS - 5 VIDÉOS SANS VUES -->
     <section class="videos-section" id="videos">
         <div class="section-header reveal">
-            <div class="section-label" data-i18n="video">Contenu</div>
-            <h2 class="section-title" data-i18n="video_title">Vidéos</h2>
+            <div class="section-label">Contenu</div>
+            <h2 class="section-title">Vidéos</h2>
         </div>
         
         <div class="videos-grid">
             <div class="video-card reveal" onclick="window.open('https://youtube.com', '_blank')">
                 <div class="video-thumbnail">
-                    <img src="frappe-video-thumb.jpg" alt="FRAPPE" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #1a1a1a, #2a2a2a)'">
+                    <img src="frappe-video-thumb.jpg" alt="FRAPPE" onerror="this.style.display='none'">
                     <div class="play-button"><i class="fas fa-play"></i></div>
                 </div>
                 <div class="video-info">
@@ -1283,7 +1947,7 @@
             
             <div class="video-card reveal" onclick="window.open('https://youtube.com', '_blank')">
                 <div class="video-thumbnail">
-                    <img src="video2-thumb.jpg" alt="Vidéo 2" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #1a1a1a, #2a2a2a)'">
+                    <img src="video2-thumb.jpg" alt="Vidéo 2" onerror="this.style.display='none'">
                     <div class="play-button"><i class="fas fa-play"></i></div>
                 </div>
                 <div class="video-info">
@@ -1293,7 +1957,7 @@
             
             <div class="video-card reveal" onclick="window.open('https://youtube.com', '_blank')">
                 <div class="video-thumbnail">
-                    <img src="video3-thumb.jpg" alt="Vidéo 3" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #1a1a1a, #2a2a2a)'">
+                    <img src="video3-thumb.jpg" alt="Vidéo 3" onerror="this.style.display='none'">
                     <div class="play-button"><i class="fas fa-play"></i></div>
                 </div>
                 <div class="video-info">
@@ -1303,7 +1967,7 @@
             
             <div class="video-card reveal" onclick="window.open('https://youtube.com', '_blank')">
                 <div class="video-thumbnail">
-                    <img src="video4-thumb.jpg" alt="Vidéo 4" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #1a1a1a, #2a2a2a)'">
+                    <img src="video4-thumb.jpg" alt="Vidéo 4" onerror="this.style.display='none'">
                     <div class="play-button"><i class="fas fa-play"></i></div>
                 </div>
                 <div class="video-info">
@@ -1313,7 +1977,7 @@
             
             <div class="video-card reveal" onclick="window.open('https://youtube.com', '_blank')">
                 <div class="video-thumbnail">
-                    <img src="video5-thumb.jpg" alt="Vidéo 5" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #1a1a1a, #2a2a2a)'">
+                    <img src="video5-thumb.jpg" alt="Vidéo 5" onerror="this.style.display='none'">
                     <div class="play-button"><i class="fas fa-play"></i></div>
                 </div>
                 <div class="video-info">
@@ -1323,10 +1987,11 @@
         </div>
     </section>
 
+    <!-- SECTION GALERIE PHOTOS - 20 PHOTOS -->
     <section class="gallery-section" id="gallery">
         <div class="gallery-header reveal">
-            <div class="section-label" data-i18n="media">Médias</div>
-            <h2 class="section-title" data-i18n="gallery">Photos</h2>
+            <div class="section-label">Médias</div>
+            <h2 class="section-title">Photos</h2>
         </div>
         
         <div class="gallery-grid-premium">
@@ -1393,35 +2058,37 @@
         </div>
     </section>
 
+    <!-- NEWSLETTER -->
     <section class="newsletter-section" id="contact">
         <div class="newsletter-content reveal">
-            <h2 class="newsletter-title" data-i18n="join_movement">Rejoins le Mouvement</h2>
-            <p class="newsletter-subtitle" data-i18n="newsletter_desc">
+            <h2 class="newsletter-title">Rejoins le Mouvement</h2>
+            <p class="newsletter-subtitle">
                 Inscris-toi pour recevoir en exclusivité les nouveaux morceaux, 
                 les dates de tournée et les actualités directement dans ta boîte mail.
             </p>
-            <form class="newsletter-form-premium" onsubmit="event.preventDefault(); alert(translations[currentLang].thanks_subscribe);">
-                <input type="email" class="newsletter-input-premium" data-i18n-placeholder="email_placeholder" placeholder="Ton adresse email" required>
-                <button type="submit" class="newsletter-btn-premium" data-i18n="subscribe">S'inscrire</button>
+            <form class="newsletter-form-premium" onsubmit="event.preventDefault(); alert('Merci pour ton inscription !');">
+                <input type="email" class="newsletter-input-premium" placeholder="Ton adresse email" required>
+                <button type="submit" class="newsletter-btn-premium">S'inscrire</button>
             </form>
             <p class="newsletter-guarantee">
-                <i class="fas fa-lock"></i> <span data-i18n="no_spam">Pas de spam, désinscription possible à tout moment</span>
+                <i class="fas fa-lock"></i> Pas de spam, désinscription possible à tout moment
             </p>
         </div>
     </section>
 
+    <!-- FOOTER -->
     <footer>
         <div class="footer-content">
-            <div>
+            div>
                 <div class="footer-brand">IK</div>
-                <p class="footer-tagline" data-i18n="footer_tagline">
+                <p class="footer-tagline">
                     Musique sans frontières. 
                     Un voyage entre l'Afrique et l'Europe, entre tradition et modernité.
                 </p>
             </div>
             
             <div>
-                <h4 class="footer-title" data-i18n="navigation">Navigation</h4>
+                <h4 class="footer-title">Navigation</h4>
                 <ul class="footer-links">
                     <li><a href="#single">FRAPPE</a></li>
                     <li><a href="#tour">Tournée</a></li>
@@ -1431,26 +2098,26 @@
             </div>
             
             <div>
-                <h4 class="footer-title" data-i18n="legal">Légal</h4>
+                <h4 class="footer-title">Légal</h4>
                 <ul class="footer-links">
-                    <li><a href="#" data-i18n="legal_notice">Mentions légales</a></li>
-                    <li><a href="#" data-i18n="privacy">Confidentialité</a></li>
-                    <li><a href="#" data-i18n="cookies">Cookies</a></li>
+                    <li><a href="#">Mentions légales</a></li>
+                    <li><a href="#">Confidentialité</a></li>
+                    <li><a href="#">Cookies</a></li>
                 </ul>
             </div>
             
             <div>
-                <h4 class="footer-title" data-i18n="contact">Contact</h4>
+                <h4 class="footer-title">Contact</h4>
                 <ul class="footer-links">
-                    <li><a href="mailto:jessic.perrin@gmail.com?subject=Booking%20-%20Demande%20de%20réservation" data-i18n="booking">Booking</a></li>
-                    <li><a href="mailto:jessic.perrin@gmail.com?subject=Presse%20-%20Demande%20d'information" data-i18n="press">Presse</a></li>
-                    <li><a href="mailto:jessic.perrin@gmail.com?subject=Partenariat%20-%20Proposition%20de%20collaboration" data-i18n="partnerships">Partenariats</a></li>
+                    <li><a href="mailto:jessic.perrin@gmail.com?subject=Booking%20-%20Demande%20de%20réservation">Booking</a></li>
+                    <li><a href="mailto:jessic.perrin@gmail.com?subject=Presse%20-%20Demande%20d'information">Presse</a></li>
+                    <li><a href="mailto:jessic.perrin@gmail.com?subject=Partenariat%20-%20Proposition%20de%20collaboration">Partenariats</a></li>
                 </ul>
-               
+                
                 <div class="manager-contact">
                     <div class="manager-toggle" onclick="toggleManager()">
                         <i class="fas fa-user-tie"></i>
-                        <span data-i18n="manager">Manager: Jessica Perrin</span>
+                        <span>Manager: Jessica Perrin</span>
                         <i class="fas fa-chevron-down" style="margin-left: auto;"></i>
                     </div>
                     <div class="manager-info" id="managerInfo">
@@ -1468,7 +2135,7 @@
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2024 Ivan Kandu (IK). <span data-i18n="all_rights">Tous droits réservés.</span></p>
+            <p>&copy; 2024 Ivan Kandu (IK). Tous droits réservés.</p>
             <div class="footer-socials">
                 <a href="https://instagram.com/ik_ivk" target="_blank"><i class="fab fa-instagram"></i></a>
                 <a href="https://tiktok.com/@ik_ivk" target="_blank"><i class="fab fa-tiktok"></i></a>
@@ -1478,281 +2145,85 @@
         </div>
     </footer>
 
+    <!-- LIGHTBOX -->
     <div class="lightbox-premium" id="lightbox" onclick="closeLightbox()">
         <div class="lightbox-close-premium"><i class="fas fa-times"></i></div>
         <img src="" alt="Full size" class="lightbox-img-premium" id="lightboxImg">
     </div>
 
     <script>
-        const translations = {
-            fr: {
-                enter: "Entrer dans l'univers",
-                hero_label: "Nouveau Single",
-                hero_subtitle: "Disponible sur toutes les plateformes",
-                discover: "Découvrir",
-                streaming: "Streaming",
-                music: "Musiques",
-                listen_now: "Écouter maintenant",
-                album_badge: "Album • 2024",
-                album_meta: "10 titres • 45 minutes",
-                album_desc: "Un voyage musical à travers le temps et les émotions. TIME marque une évolution artistique majeure, mêlant influences africaines et sonorités européennes dans une production raffinée et contemporaine.",
-                new_single: "Nouveau Single",
-                single_desc: "Le nouveau single qui marque un tournant. Une production explosive qui révèle toute l'énergie et la passion d'IK. Disponible maintenant sur toutes les plateformes de streaming.",
-                listen: "Écouter",
-                watch_clip: "Voir le clip",
-                now_available: "Maintenant disponible",
-                follow_me: "Suivez-moi",
-                social_networks: "Réseaux Sociaux",
-                follow: "Suivre",
-                media: "Médias",
-                gallery: "Photos",
-                video: "Contenu",
-                video_title: "Vidéos",
-                bio_role: "Artiste • Chanteur • Compositeur",
-                bio_text1: "Né le 12 janvier 1993 en République démocratique du Congo, <strong>Ivan Kandu</strong> est un artiste suisse au parcours vibrant et multiculturel. Arrivé en Suisse en 2006, il grandit entre le Tessin et le canton de Vaud, où il forge son identité artistique unique.",
-                bio_text2: "Son histoire avec la musique commence très tôt : à seulement 10 ans, il devient la voix solo et le leader de la chorale « Les Anges du Seigneur ». Cette première scène révèle déjà une présence naturelle et une puissance vocale remarquable.",
-                bio_text3: "Influencé par le <strong>RnB</strong>, la <strong>Rumba</strong>, la <strong>Pop</strong> et l'<strong>Afropop</strong>, Ivan se fait connaître grâce à ses reprises sur YouTube avant de passer à la création originale. Il écrit et compose en français, italien, lingala et anglais.",
-                tag_rumba: "Rumba Congolaise",
-                tag_pop: "Pop Africaine",
-                join_movement: "Rejoins le Mouvement",
-                newsletter_desc: "Inscris-toi pour recevoir en exclusivité les nouveaux morceaux, les dates de tournée et les actualités directement dans ta boîte mail.",
-                email_placeholder: "Ton adresse email",
-                subscribe: "S'inscrire",
-                no_spam: "Pas de spam, désinscription possible à tout moment",
-                thanks_subscribe: "Merci pour ton inscription !",
-                footer_tagline: "Musique sans frontières. Un voyage entre l'Afrique et l'Europe, entre tradition et modernité.",
-                navigation: "Navigation",
-                legal: "Légal",
-                legal_notice: "Mentions légales",
-                privacy: "Confidentialité",
-                cookies: "Cookies",
-                contact: "Contact",
-                booking: "Booking",
-                press: "Presse",
-                partnerships: "Partenariats",
-                manager: "Manager: Jessica Perrin",
-                all_rights: "Tous droits réservés.",
-                add_photo: "Ajoute ta photo ici<br>(bio-photo.jpg)"
-            },
-            en: {
-                enter: "Enter the universe",
-                hero_label: "New Single",
-                hero_subtitle: "Available on all platforms",
-                discover: "Discover",
-                streaming: "Streaming",
-                music: "Music",
-                listen_now: "Listen now",
-                album_badge: "Album • 2024",
-                album_meta: "10 tracks • 45 minutes",
-                album_desc: "A musical journey through time and emotions. TIME marks a major artistic evolution, blending African influences with European sounds in a refined and contemporary production.",
-                new_single: "New Single",
-                single_desc: "The new single that marks a turning point. An explosive production that reveals all the energy and passion of IK. Available now on all streaming platforms.",
-                listen: "Listen",
-                watch_clip: "Watch the video",
-                now_available: "Now available",
-                follow_me: "Follow me",
-                social_networks: "Social Networks",
-                follow: "Follow",
-                media: "Media",
-                gallery: "Photos",
-                video: "Content",
-                video_title: "Videos",
-                bio_role: "Artist • Singer • Composer",
-                bio_text1: "Born on January 12, 1993, in the Democratic Republic of Congo, <strong>Ivan Kandu</strong> is a Swiss artist with a vibrant and multicultural journey. Arriving in Switzerland in 2006, he grew up between Ticino and the canton of Vaud, where he forged his unique artistic identity.",
-                bio_text2: "His story with music begins very early: at just 10 years old, he becomes the solo voice and leader of the choir « Les Anges du Seigneur ». This first stage already reveals a natural presence and remarkable vocal power.",
-                bio_text3: "Influenced by <strong>RnB</strong>, <strong>Rumba</strong>, <strong>Pop</strong>, and <strong>Afropop</strong>, Ivan made a name for himself through his covers on YouTube before moving on to original creation. He writes and composes in French, Italian, Lingala, and English.",
-                tag_rumba: "Congolese Rumba",
-                tag_pop: "African Pop",
-                join_movement: "Join the Movement",
-                newsletter_desc: "Sign up to exclusively receive new tracks, tour dates, and news directly in your inbox.",
-                email_placeholder: "Your email address",
-                subscribe: "Subscribe",
-                no_spam: "No spam, unsubscribe at any time",
-                thanks_subscribe: "Thank you for subscribing!",
-                footer_tagline: "Music without borders. A journey between Africa and Europe, between tradition and modernity.",
-                navigation: "Navigation",
-                legal: "Legal",
-                legal_notice: "Legal Notice",
-                privacy: "Privacy",
-                cookies: "Cookies",
-                contact: "Contact",
-                booking: "Booking",
-                press: "Press",
-                partnerships: "Partnerships",
-                manager: "Manager: Jessica Perrin",
-                all_rights: "All rights reserved.",
-                add_photo: "Add your photo here<br>(bio-photo.jpg)"
-            },
-            it: {
-                enter: "Entra nell'universo",
-                hero_label: "Nuovo Singolo",
-                hero_subtitle: "Disponibile su tutte le piattaforme",
-                discover: "Scopri",
-                streaming: "Streaming",
-                music: "Musica",
-                listen_now: "Ascolta ora",
-                album_badge: "Album • 2024",
-                album_meta: "10 brani • 45 minuti",
-                album_desc: "Un viaggio musicale attraverso il tempo e le emozioni. TIME segna un'evoluzione artistica importante, mescolando influenze africane e sonorità europee in una produzione raffinata e contemporanea.",
-                new_single: "Nuovo Singolo",
-                single_desc: "Il nuovo singolo che segna una svolta. Una produzione esplosiva che rivela tutta l'energia e la passione di IK. Disponibile ora su tutte le piattaforme di streaming.",
-                listen: "Ascolta",
-                watch_clip: "Guarda il video",
-                now_available: "Ora disponibile",
-                follow_me: "Seguimi",
-                social_networks: "Social Network",
-                follow: "Segui",
-                media: "Media",
-                gallery: "Foto",
-                video: "Contenuto",
-                video_title: "Video",
-                bio_role: "Artista • Cantante • Compositore",
-                bio_text1: "Nato il 12 gennaio 1993 nella Repubblica Democratica del Congo, <strong>Ivan Kandu</strong> è un artista svizzero con un percorso vibrante e multiculturale. Arrivato in Svizzera nel 2006, cresce tra il Ticino e il canton Vaud, dove forgia la sua unica identità artistica.",
-                bio_text2: "La sua storia con la musica inizia molto presto: a soli 10 anni diventa la voce solista e il leader del coro « Les Anges du Seigneur ». Questa prima scena rivela già una presenza naturale e una notevole potenza vocale.",
-                bio_text3: "Influenzato dall'<strong>RnB</strong>, dalla <strong>Rumba</strong>, dalla <strong>Pop</strong> e dall'<strong>Afropop</strong>, Ivan si è fatto conoscere attraverso le sue cover su YouTube prima di passare alla creazione originale. Scrive e compone in francese, italiano, lingala e inglese.",
-                tag_rumba: "Rumba Congolese",
-                tag_pop: "Pop Africana",
-                join_movement: "Unisciti al Movimento",
-                newsletter_desc: "Iscriviti per ricevere in esclusiva i nuovi brani, le date del tour e le notizie direttamente nella tua casella di posta.",
-                email_placeholder: "Il tuo indirizzo email",
-                subscribe: "Iscriviti",
-                no_spam: "Nessuno spam, disiscrizione possibile in qualsiasi momento",
-                thanks_subscribe: "Grazie per l'iscrizione!",
-                footer_tagline: "Musica senza confini. Un viaggio tra l'Africa e l'Europa, tra tradizione e modernità.",
-                navigation: "Navigazione",
-                legal: "Legale",
-                legal_notice: "Note legali",
-                privacy: "Privacy",
-                cookies: "Cookie",
-                contact: "Contatto",
-                booking: "Booking",
-                press: "Stampa",
-                partnerships: "Partnership",
-                manager: "Manager: Jessica Perrin",
-                all_rights: "Tutti i diritti riservati.",
-                add_photo: "Aggiungi la tua foto qui<br>(bio-photo.jpg)"
-            },
-            de: {
-                enter: "Betrete das Universum",
-                hero_label: "Neue Single",
-                hero_subtitle: "Auf allen Plattformen verfügbar",
-                discover: "Entdecken",
-                streaming: "Streaming",
-                music: "Musik",
-                listen_now: "Jetzt anhören",
-                album_badge: "Album • 2024",
-                album_meta: "10 Titel • 45 Minuten",
-                album_desc: "Eine musikalische Reise durch Zeit und Emotionen. TIME markiert eine große künstlerische Evolution, die afrikanische Einflüsse mit europäischen Klängen in einer raffinierten und zeitgenössischen Produktion verbindet.",
-                new_single: "Neue Single",
-                single_desc: "Die neue Single, die einen Wendepunkt markiert. Eine explosive Produktion, die die ganze Energie und Leidenschaft von IK offenbart. Jetzt auf allen Streaming-Plattformen verfügbar.",
-                listen: "Anhören",
-                watch_clip: "Video ansehen",
-                now_available: "Jetzt verfügbar",
-                follow_me: "Folge mir",
-                social_networks: "Soziale Netzwerke",
-                follow: "Folgen",
-                media: "Medien",
-                gallery: "Fotos",
-                video: "Inhalt",
-                video_title: "Videos",
-                bio_role: "Künstler • Sänger • Komponist",
-                bio_text1: "Geboren am 12. Januar 1993 in der Demokratischen Republik Kongo, ist <strong>Ivan Kandu</strong> ein Schweizer Künstler mit einem lebendigen und multikulturellen Werdegang. 2006 kam er in die Schweiz und wuchs zwischen dem Tessin und dem Kanton Waadt auf, wo er seine einzigartige künstlerische Identität schmiedete.",
-                bio_text2: "Seine Geschichte mit der Musik beginnt sehr früh: Mit nur 10 Jahren wird er zur Solostimme und Leiter des Chores « Les Anges du Seigneur ». Diese erste Bühne offenbart bereits eine natürliche Präsenz und bemerkbare Stimmkraft.",
-                bio_text3: "Beeinflusst von <strong>RnB</strong>, <strong>Rumba</strong>, <strong>Pop</strong> und <strong>Afropop</strong>, machte Ivan sich durch seine Covers auf YouTube einen Namen, bevor er zur eigenen Kreation überging. Er schreibt und komponiert auf Französisch, Italienisch, Lingala und Englisch.",
-                tag_rumba: "Kongolesische Rumba",
-                tag_pop: "Afrikanische Pop",
-                join_movement: "Bewegung beitreten",
-                newsletter_desc: "Melde dich an, um exklusiv neue Tracks, Tourdaten und Neuigkeiten direkt in dein Postfach zu erhalten.",
-                email_placeholder: "Deine E-Mail-Adresse",
-                subscribe: "Abonnieren",
-                no_spam: "Kein Spam, jederzeit abmeldbar",
-                thanks_subscribe: "Danke für deine Anmeldung!",
-                footer_tagline: "Musik ohne Grenzen. Eine Reise zwischen Afrika und Europa, zwischen Tradition und Moderne.",
-                navigation: "Navigation",
-                legal: "Rechtliches",
-                legal_notice: "Impressum",
-                privacy: "Datenschutz",
-                cookies: "Cookies",
-                contact: "Kontakt",
-                booking: "Booking",
-                press: "Presse",
-                partnerships: "Partnerschaften",
-                manager: "Manager: Jessica Perrin",
-                all_rights: "Alle Rechte vorbehalten.",
-                add_photo: "Füge dein Foto hier hinzu<br>(bio-photo.jpg)"
-            },
-            pt: {
-                enter: "Entrar no universo",
-                hero_label: "Novo Single",
-                hero_subtitle: "Disponível em todas as plataformas",
-                discover: "Descobrir",
-                streaming: "Streaming",
-                music: "Música",
-                listen_now: "Ouvir agora",
-                album_badge: "Álbum • 2024",
-                album_meta: "10 faixas • 45 minutos",
-                album_desc: "Uma jornada musical através do tempo e das emoções. TIME marca uma evolução artística importante, misturando influências africanas e sonoridades europeias em uma produção refinada e contemporânea.",
-                new_single: "Novo Single",
-                single_desc: "O novo single que marca uma virada. Uma produção explosiva que revela toda a energia e paixão de IK. Disponível agora em todas as plataformas de streaming.",
-                listen: "Ouvir",
-                watch_clip: "Ver o vídeo",
-                now_available: "Agora disponível",
-                follow_me: "Siga-me",
-                social_networks: "Redes Sociais",
-                follow: "Seguir",
-                media: "Mídia",
-                gallery: "Fotos",
-                video: "Conteúdo",
-                video_title: "Vídeos",
-                bio_role: "Artista • Cantor • Compositor",
-                bio_text1: "Nascido em 12 de janeiro de 1993 na República Democrática do Congo, <strong>Ivan Kandu</strong> é um artista suíço com uma trajetória vibrante e multicultural. Chegou à Suíça em 2006 e cresceu entre o Ticino e o cantão de Vaud, onde forjou sua identidade artística única.",
-                bio_text2: "Sua história com a música começa muito cedo: aos apenas 10 anos, torna-se a voz solo e líder do coral « Les Anges du Seigneur ». Este primeiro palco já revela uma presença natural e um poder vocal notável.",
-                bio_text3: "Influenciado pelo <strong>RnB</strong>, <strong>Rumba</strong>, <strong>Pop</strong> e <strong>Afropop</strong>, Ivan ficou conhecido por seus covers no YouTube antes de passar para a criação original. Ele escreve e compõe em francês, italiano, lingala e inglês.",
-                tag_rumba: "Rumba Congolesa",
-                tag_pop: "Pop Africana",
-                join_movement: "Junte-se ao Movimento",
-                newsletter_desc: "Inscreva-se para receber exclusivamente novas faixas, datas de turnê e notícias diretamente na sua caixa de entrada.",
-                email_placeholder: "Seu endereço de email",
-                subscribe: "Inscrever-se",
-                no_spam: "Sem spam, cancelamento a qualquer momento",
-                thanks_subscribe: "Obrigado por se inscrever!",
-                footer_tagline: "Música sem fronteiras. Uma jornada entre a África e a Europa, entre tradição e modernidade.",
-                navigation: "Navegação",
-                legal: "Legal",
-                legal_notice: "Aviso legal",
-                privacy: "Privacidade",
-                cookies: "Cookies",
-                contact: "Contato",
-                booking: "Booking",
-                press: "Imprensa",
-                partnerships: "Parcerias",
-                manager: "Manager: Jessica Perrin",
-                all_rights: "Todos os direitos reservados.",
-                add_photo: "Adicione sua foto aqui<br>(bio-photo.jpg)"
-            },
-            es: {
-                enter: "Entrar al universo",
-                hero_label: "Nuevo Single",
-                hero_subtitle: "Disponible en todas las plataformas",
-                discover: "Descubrir",
-                streaming: "Streaming",
-                music: "Música",
-                listen_now: "Escuchar ahora",
-                album_badge: "Álbum • 2024",
-                album_meta: "10 pistas • 45 minutos",
-                album_desc: "Un viaje musical a través del tiempo y las emociones. TIME marca una evolución artística importante, mezclando influencias africanas y sonoridades europeías en una producción refinada y contemporánea.",
-                new_single: "Nuevo Single",
-                single_desc: "El nuevo single que marca un punto de inflexión. Una producción explosiva que revela toda la energía y pasión de IK. Disponible ahora en todas las plataformas de streaming.",
-                listen: "Escuchar",
-                watch_clip: "Ver el video",
-                now_available: "Ahora disponible",
-                follow_me: "Sígueme",
-                social_networks: "Redes Sociales",
-                follow: "Seguir",
-                media: "Medios",
-                gallery: "Fotos",
-                video: "Contenido",
-                video_title: "Videos",
-                bio_role: "Artista • Cantante • Compositor",
-                bio_text1: "Nacido el 12 de enero de 1993 en la República Democrática del Congo, <strong>Ivan Kandu</strong> es un artista suizo con una trayectoria vibrante y multicultural. Llegó a Suiza en 2006 y creció entre el Tesino y el cantón de Vaud, donde forjó su identidad artística única.",
-                bio_text2: "Su historia con la música comienza muy temprano: a los solo 10 años, se convierte en la voz solista y líder del coro « Les Anges du Seigneur ». Este primer escenario ya revela una presen
+        // DÉMARRAGE
+        function startExperience() {
+            document.getElementById('startOverlay').classList.add('hidden');
+            const audio = document.getElementById('welcomeJingle');
+            audio.volume = 0.5;
+            audio.play().catch(e => console.log('Audio autoplay prevented'));
+        }
+
+        // LIGHTBOX
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            img.src = src;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // MANAGER TOGGLE
+        function toggleManager() {
+            const info = document.getElementById('managerInfo');
+            const toggle = document.querySelector('.manager-toggle');
+            info.classList.toggle('active');
+            toggle.classList.toggle('active');
+        }
+
+        // NAVIGATION SCROLL
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // ANIMATIONS AU SCROLL
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // SMOOTH SCROLL POUR LES ANCRES
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // EFFET PARALLAXE SUBTIL POUR LE HERO
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroBg = document.querySelector('.hero-bg');
+            if (heroBg) {
+                heroBg.style.transform = `translateY(${scrolled * 0.5}px) scale(${1 + scrolled * 0.0005})`;
+            }
+        });
+    </script>
+</body>
+</html>
