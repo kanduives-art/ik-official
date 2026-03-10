@@ -162,7 +162,7 @@
         .nav-links a:hover::before { width: 100%; }
         .nav-links a:hover { color: var(--primary); }
 
-        /* SÉLECTEUR DE LANGUE - RECTANGLE SIMPLE */
+        /* SÉLECTEUR DE LANGUE */
         .language-selector {
             position: relative;
             z-index: 1001;
@@ -506,7 +506,6 @@
 
         .btn-secondary:hover { border-color: var(--light); background: rgba(255,255,255,0.1); transform: translateY(-3px); }
 
-        /* Bouton désactivé */
         .btn-disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -592,7 +591,7 @@
         
         .playing-text { font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* TOURNÉE - DATE CLIGNOTANTE */
+        /* TOURNÉE - SYSTÈME DE DATES MULTICOLORES */
         .tour-section {
             background: var(--darker);
             padding: 120px 60px;
@@ -603,50 +602,200 @@
             justify-content: center;
         }
 
-        .tour-content { text-align: center; max-width: 800px; }
+        .tour-content { text-align: center; max-width: 900px; width: 100%; }
         
-        .tour-date-blinking {
-            text-align: center;
-            padding: 60px 80px;
-            background: rgba(255,51,51,0.1);
-            border: 3px solid var(--primary);
-            border-radius: 30px;
-            animation: blinkRed 2s infinite;
-            margin: 40px 0;
-        }
-
-        @keyframes blinkRed {
-            0%, 100% {
-                background: rgba(255,51,51,0.1);
-                box-shadow: 0 0 30px rgba(255,51,51,0.3);
-                transform: scale(1);
-            }
-            50% {
-                background: rgba(255,51,51,0.3);
-                box-shadow: 0 0 60px rgba(255,51,51,0.6);
-                transform: scale(1.02);
-            }
-        }
-
-        .date-badge {
-            font-family: 'Oswald', sans-serif;
-            font-size: 4rem;
-            color: var(--primary);
-            letter-spacing: 8px;
-            margin-bottom: 20px;
-            text-shadow: 0 0 30px rgba(255,51,51,0.5);
-        }
-
-        .venue-name {
-            font-family: 'Oswald', sans-serif;
-            font-size: 2.5rem;
-            color: var(--light);
-            letter-spacing: 12px;
-        }
-
         .tour-icon { font-size: 5rem; color: var(--primary); margin-bottom: 30px; opacity: 0.5; }
 
-        /* VIDÉOS - 5 VIDÉOS */
+        .tour-dates-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .tour-date-card {
+            position: relative;
+            background: rgba(255,255,255,0.02);
+            border: 2px solid;
+            border-radius: 25px;
+            padding: 35px 40px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .tour-date-card.red {
+            border-color: rgba(255,51,51,0.4);
+            animation: pulseRed 3s infinite;
+        }
+
+        .tour-date-card.blue {
+            border-color: rgba(51,153,255,0.4);
+            animation: pulseBlue 3s infinite;
+            animation-delay: 0.5s;
+        }
+
+        .tour-date-card.green {
+            border-color: rgba(51,255,153,0.4);
+            animation: pulseGreen 3s infinite;
+            animation-delay: 1s;
+        }
+
+        .tour-date-card.purple {
+            border-color: rgba(153,51,255,0.4);
+            animation: pulsePurple 3s infinite;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes pulseRed {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,51,51,0.2), inset 0 0 20px rgba(255,51,51,0.05); transform: scale(1); }
+            50% { box-shadow: 0 0 40px rgba(255,51,51,0.5), inset 0 0 30px rgba(255,51,51,0.1); transform: scale(1.02); }
+        }
+
+        @keyframes pulseBlue {
+            0%, 100% { box-shadow: 0 0 20px rgba(51,153,255,0.2), inset 0 0 20px rgba(51,153,255,0.05); transform: scale(1); }
+            50% { box-shadow: 0 0 40px rgba(51,153,255,0.5), inset 0 0 30px rgba(51,153,255,0.1); transform: scale(1.02); }
+        }
+
+        @keyframes pulseGreen {
+            0%, 100% { box-shadow: 0 0 20px rgba(51,255,153,0.2), inset 0 0 20px rgba(51,255,153,0.05); transform: scale(1); }
+            50% { box-shadow: 0 0 40px rgba(51,255,153,0.5), inset 0 0 30px rgba(51,255,153,0.1); transform: scale(1.02); }
+        }
+
+        @keyframes pulsePurple {
+            0%, 100% { box-shadow: 0 0 20px rgba(153,51,255,0.2), inset 0 0 20px rgba(153,51,255,0.05); transform: scale(1); }
+            50% { box-shadow: 0 0 40px rgba(153,51,255,0.5), inset 0 0 30px rgba(153,51,255,0.1); transform: scale(1.02); }
+        }
+
+        .date-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .tour-date-card:hover .date-glow {
+            opacity: 1;
+        }
+
+        .date-content {
+            position: relative;
+            z-index: 2;
+            text-align: left;
+        }
+
+        .date-day {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .tour-date-card.red .date-day { color: #ff3333; text-shadow: 0 0 20px rgba(255,51,51,0.5); }
+        .tour-date-card.blue .date-day { color: #3399ff; text-shadow: 0 0 20px rgba(51,153,255,0.5); }
+        .tour-date-card.green .date-day { color: #33ff99; text-shadow: 0 0 20px rgba(51,255,153,0.5); }
+        .tour-date-card.purple .date-day { color: #9933ff; text-shadow: 0 0 20px rgba(153,51,255,0.5); }
+
+        .date-venue {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            color: #fff;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .date-city {
+            font-size: 1.1rem;
+            color: #888;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .date-flag {
+            margin-left: 10px;
+            font-size: 1.3rem;
+        }
+
+        .date-badge-special {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            background: rgba(255,51,51,0.2);
+            color: #ff3333;
+            border: 1px solid rgba(255,51,51,0.3);
+        }
+
+        .tour-date-card.blue .date-badge-special {
+            background: rgba(51,153,255,0.2);
+            color: #3399ff;
+            border-color: rgba(51,153,255,0.3);
+        }
+
+        .tour-date-card.green .date-badge-special {
+            background: rgba(51,255,153,0.2);
+            color: #33ff99;
+            border-color: rgba(51,255,153,0.3);
+        }
+
+        .tour-date-card.purple .date-badge-special {
+            background: rgba(153,51,255,0.2);
+            color: #9933ff;
+            border-color: rgba(153,51,255,0.3);
+        }
+
+        .date-badge-special.prestige {
+            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,140,0,0.2)) !important;
+            color: #ffd700 !important;
+            border-color: rgba(255,215,0,0.4) !important;
+        }
+
+        .date-pulse {
+            position: absolute;
+            top: 50%;
+            right: 30px;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tour-date-card.red .date-pulse { background: #ff3333; box-shadow: 0 0 20px #ff3333; }
+        .tour-date-card.blue .date-pulse { background: #3399ff; box-shadow: 0 0 20px #3399ff; }
+        .tour-date-card.green .date-pulse { background: #33ff99; box-shadow: 0 0 20px #33ff99; }
+        .tour-date-card.purple .date-pulse { background: #9933ff; box-shadow: 0 0 20px #9933ff; }
+
+        .tour-date-card:hover .date-pulse {
+            opacity: 1;
+            animation: pulseDot 1.5s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { transform: translateY(-50%) scale(1); opacity: 1; }
+            50% { transform: translateY(-50%) scale(1.5); opacity: 0.5; }
+        }
+
+        .tour-date-card:hover {
+            transform: translateX(10px) scale(1.02);
+        }
+
+        .tour-date-blinking { display: none; }
+
+        /* VIDÉOS */
         .videos-section { background: var(--darker); padding: 120px 60px; }
         
         .videos-grid {
@@ -692,7 +841,7 @@
         .video-info { padding: 30px; }
         .video-title { font-family: 'Oswald', sans-serif; font-size: 1.5rem; margin-bottom: 10px; line-height: 1.3; }
 
-        /* PHOTOS - 10 PHOTOS */
+        /* PHOTOS */
         .gallery-section { background: linear-gradient(to bottom, #0a0a0a, #111); padding: 120px 60px; }
         .gallery-header { text-align: center; margin-bottom: 80px; }
         
@@ -782,7 +931,7 @@
         .newsletter-btn-premium:hover { background: transparent; color: var(--primary); transform: scale(1.05); }
         .newsletter-guarantee { color: #666; font-size: 0.9rem; }
 
-        /* FOOTER - COLONNES UNE APRÈS L'AUTRE DE DROITE À GAUCHE */
+        /* FOOTER */
         footer {
             background: #000;
             padding: 80px 60px 40px;
@@ -871,7 +1020,6 @@
             color: var(--primary);
         }
 
-        /* MANAGER - MODIFIÉ : toujours visible */
         .manager-contact {
             margin-top: 20px;
             padding: 20px;
@@ -1009,8 +1157,6 @@
                 justify-content: center;
                 gap: 40px;
             }
-            .date-badge { font-size: 3rem; }
-            .venue-name { font-size: 1.8rem; }
         }
 
         @media (max-width: 768px) {
@@ -1031,9 +1177,10 @@
             .footer-tagline { max-width: 100%; }
             .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
             .hero-title { letter-spacing: 10px; }
-            .date-badge { font-size: 2rem; letter-spacing: 4px; }
-            .venue-name { font-size: 1.3rem; letter-spacing: 6px; }
-            .tour-date-blinking { padding: 40px 30px; }
+            .tour-date-card { padding: 25px; }
+            .date-day { font-size: 1.4rem; }
+            .date-venue { font-size: 1.2rem; }
+            .tour-date-card:hover { transform: translateX(5px) scale(1.01); }
         }
     </style>
 <base target="_blank">
@@ -1067,7 +1214,6 @@
             </ul>
         </div>
         
-        <!-- SÉLECTEUR DE LANGUE - RECTANGLE SIMPLE -->
         <div class="language-selector">
             <div class="lang-toggle" id="langToggle" onclick="toggleLanguage()">🇫🇷</div>
             <div class="lang-menu">
@@ -1109,7 +1255,7 @@
         </div>
     </section>
 
-    <!-- 1. FRAPPE (Nouveau Single) -->
+    <!-- 1. FRAPPE -->
     <section class="single-section" id="single">
         <div class="single-container">
             <div class="single-content reveal">
@@ -1125,7 +1271,6 @@
                     <a href="https://open.spotify.com/intl-fr/album/5GW1zPmqFqcBNNXk5I48sH?si=-WbyMzARSgKTYdv8MrCE1g" class="btn-primary" target="_blank">
                         <i class="fas fa-play"></i> Écouter FRAPPE maintenant
                     </a>
-                    <!-- MODIFIÉ : Bouton clip désactivé -->
                     <span class="btn-secondary btn-disabled">
                         <i class="fab fa-youtube"></i> Clip à venir...
                     </span>
@@ -1149,25 +1294,64 @@
         </div>
     </section>
 
-    <!-- 2. TOURNÉE - Date 02 avril MAD club Lausanne qui clignote en rouge -->
+    <!-- 2. TOURNÉE - 4 dates avec animation multicolores -->
     <section class="tour-section" id="tour">
         <div class="tour-content reveal">
             <i class="fas fa-microphone-alt tour-icon"></i>
-            <h2 class="section-title" style="margin-bottom: 40px;">Tournée</h2>
+            <h2 class="section-title" style="margin-bottom: 60px;">Tournée</h2>
             
-            <div class="tour-date-blinking">
-                <div class="date-badge">02 AVRIL 2026</div>
-                <div class="venue-name">MAD Club LAUSANNE</div>
+            <div class="tour-dates-container">
+                <!-- Date 1 - ROUGE -->
+                <div class="tour-date-card red" onclick="window.open('https://www.mad.club', '_blank')">
+                    <div class="date-glow"></div>
+                    <div class="date-content">
+                        <div class="date-day">02 AVRIL 2026</div>
+                        <div class="date-venue">MAD Club</div>
+                        <div class="date-city">LAUSANNE <span class="date-flag">🇨🇭</span></div>
+                        <div class="date-badge-special">À venir</div>
+                    </div>
+                    <div class="date-pulse"></div>
+                </div>
+
+                <!-- Date 2 - BLEU -->
+                <div class="tour-date-card blue" onclick="alert('Billets bientôt disponibles !')">
+                    <div class="date-glow"></div>
+                    <div class="date-content">
+                        <div class="date-day">03 AVRIL 2026</div>
+                        <div class="date-venue">Halles de l'Île</div>
+                        <div class="date-city">GENÈVE <span class="date-flag">🇨🇭</span></div>
+                        <div class="date-badge-special guest">1er Partie RNBOI</div>
+                    </div>
+                    <div class="date-pulse"></div>
+                </div>
+
+                <!-- Date 3 - VERT -->
+                <div class="tour-date-card green" onclick="alert('Billets bientôt disponibles !')">
+                    <div class="date-glow"></div>
+                    <div class="date-content">
+                        <div class="date-day">15 AOÛT 2026</div>
+                        <div class="date-venue">Semana Cultural</div>
+                        <div class="date-city">AÇORES <span class="date-flag">🇵🇹</span></div>
+                        <div class="date-badge-special">Festival</div>
+                    </div>
+                    <div class="date-pulse"></div>
+                </div>
+
+                <!-- Date 4 - VIOLET -->
+                <div class="tour-date-card purple" onclick="alert('Billets bientôt disponibles !')">
+                    <div class="date-glow"></div>
+                    <div class="date-content">
+                        <div class="date-day">06 OCTOBRE 2026</div>
+                        <div class="date-venue">Théâtre des Champs-Élysées</div>
+                        <div class="date-city">PARIS <span class="date-flag">🇫🇷</span></div>
+                        <div class="date-badge-special prestige">Concert Prestige</div>
+                    </div>
+                    <div class="date-pulse"></div>
+                </div>
             </div>
-            
-            <!-- MODIFIÉ : Lien vers www.mad.club -->
-            <a href="https://www.mad.club" target="_blank" class="btn-primary" style="margin-top: 40px;">
-                <i class="fas fa-ticket-alt"></i> Réserver
-            </a>
         </div>
     </section>
-
-    <!-- 3. MUSIQUES - Section streaming -->
+        <!-- 3. MUSIQUES -->
     <section class="music-section" id="music">
         <div class="music-container">
             <div class="music-header reveal">
@@ -1197,7 +1381,7 @@
         </div>
     </section>
 
-    <!-- 4. BIOGRAPHIE - Bio complète -->
+    <!-- 4. BIOGRAPHIE -->
     <section class="bio-section" id="bio">
         <div class="bio-container">
             <div class="bio-portrait reveal">
@@ -1261,7 +1445,7 @@
         </div>
     </section>
 
-    <!-- 6. PHOTOS - 10 photos -->
+    <!-- 6. PHOTOS -->
     <section class="gallery-section" id="gallery">
         <div class="gallery-header reveal">
             <div class="section-label">Médias</div>
@@ -1302,7 +1486,7 @@
         </div>
     </section>
 
-    <!-- 7. ALBUM 2024 TIME -->
+    <!-- 7. ALBUM TIME -->
     <section class="album-section" id="album">
         <div class="album-container">
             <div class="album-visual reveal">
@@ -1336,7 +1520,7 @@
         </div>
     </section>
 
-    <!-- NEWSLETTER / CONTACT -->
+    <!-- NEWSLETTER -->
     <section class="newsletter-section" id="contact">
         <div class="newsletter-content reveal">
             <h2 class="newsletter-title">Rejoins le Mouvement</h2>
@@ -1354,10 +1538,9 @@
         </div>
     </section>
 
-    <!-- FOOTER - COLONNES UNE APRÈS L'AUTRE DE DROITE À GAUCHE -->
+    <!-- FOOTER -->
     <footer>
         <div class="footer-content">
-            <!-- Contact (droite) -->
             <div class="footer-column">
                 <h4 class="footer-title">Contact</h4>
                 <ul class="footer-links">
@@ -1366,7 +1549,6 @@
                     <li><a href="mailto:jessic.perrin@gmail.com?subject=Partenariat%20-%20Proposition%20de%20collaboration">Partenariats</a></li>
                 </ul>
                
-                <!-- MODIFIÉ : Manager toujours visible avec nom -->
                 <div class="manager-contact">
                     <div class="manager-title">
                         <i class="fas fa-user-tie"></i>
@@ -1385,7 +1567,6 @@
                 </div>
             </div>
 
-            <!-- Légal -->
             <div class="footer-column">
                 <h4 class="footer-title">Légal</h4>
                 <ul class="footer-links">
@@ -1395,7 +1576,6 @@
                 </ul>
             </div>
 
-            <!-- Navigation -->
             <div class="footer-column">
                 <h4 class="footer-title">Navigation</h4>
                 <ul class="footer-links">
@@ -1407,7 +1587,6 @@
                 </ul>
             </div>
 
-            <!-- IK (gauche) -->
             <div class="footer-column" style="margin-right: auto;">
                 <div class="footer-brand">IK</div>
                 <p class="footer-tagline">
@@ -1435,7 +1614,6 @@
     </div>
 
     <script>
-        // DÉMARRAGE
         function startExperience() {
             document.getElementById('startOverlay').classList.add('hidden');
             const audio = document.getElementById('welcomeJingle');
@@ -1443,7 +1621,6 @@
             audio.play().catch(e => console.log('Audio autoplay prevented'));
         }
 
-        // CHANGEMENT DE LANGUE
         function changeLanguage(lang) {
             const flags = {
                 fr: '🇫🇷', en: '🇬🇧', it: '🇮🇹', de: '🇩🇪',
@@ -1452,7 +1629,6 @@
             document.getElementById('langToggle').textContent = flags[lang];
         }
 
-        // LIGHTBOX
         function openLightbox(src) {
             const lightbox = document.getElementById('lightbox');
             const img = document.getElementById('lightboxImg');
@@ -1467,13 +1643,11 @@
             document.body.style.overflow = 'auto';
         }
 
-        // NAVIGATION SCROLL
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
             navbar.classList.toggle('scrolled', window.scrollY > 50);
         });
 
-        // ANIMATIONS AU SCROLL
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -1489,7 +1663,6 @@
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // SMOOTH SCROLL
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -1500,7 +1673,6 @@
             });
         });
 
-        // EFFET PARALLAXE
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const heroBg = document.querySelector('.hero-bg');
