@@ -671,6 +671,25 @@
             50% { box-shadow: 0 0 40px rgba(153,51,255,0.5), inset 0 0 30px rgba(153,51,255,0.1); transform: scale(1.02); }
         }
 
+        .tour-date-card.gold {
+            border-color: rgba(255,165,0,0.4);
+            animation: pulseGold 3s infinite;
+            animation-delay: 2s;
+        }
+
+        @keyframes pulseGold {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,165,0,0.2), inset 0 0 20px rgba(255,165,0,0.05); transform: scale(1); }
+            50% { box-shadow: 0 0 40px rgba(255,165,0,0.5), inset 0 0 30px rgba(255,165,0,0.1); transform: scale(1.02); }
+        }
+
+        .tour-date-card.gold .date-day { color: #ffa500; text-shadow: 0 0 20px rgba(255,165,0,0.5); }
+        .tour-date-card.gold .date-pulse { background: #ffa500; box-shadow: 0 0 20px #ffa500; }
+        .tour-date-card.gold .date-badge-special {
+            background: rgba(255,165,0,0.2);
+            color: #ffa500;
+            border-color: rgba(255,165,0,0.3);
+        }
+
         .date-glow {
             position: absolute;
             top: -50%;
@@ -1185,6 +1204,7 @@
         }
     </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -1295,14 +1315,14 @@
         </div>
     </section>
 
-    <!-- 2. TOURNÉE - 3 dates restantes (MAD Club retiré) -->
+        <!-- 2. TOURNÉE - 5 dates -->
     <section class="tour-section" id="tour">
         <div class="tour-content reveal">
             <i class="fas fa-microphone-alt tour-icon"></i>
             <h2 class="section-title" style="margin-bottom: 60px;">Tournée</h2>
-            
+
             <div class="tour-dates-container">
-                <!-- Date 1 - BLEU (anciennement date 2) -->
+                <!-- Date 1 - BLEU -->
                 <div class="tour-date-card blue" onclick="alert('Billets bientôt disponibles !')">
                     <div class="date-glow"></div>
                     <div class="date-content">
@@ -1314,7 +1334,31 @@
                     <div class="date-pulse"></div>
                 </div>
 
-                <!-- Date 2 - VERT (anciennement date 3) -->
+                <!-- Date 2 - ROUGE (NOUVEAU) -->
+                <div class="tour-date-card red" onclick="alert('Billets bientôt disponibles !')">
+                    <div class="date-glow"></div>
+                    <div class="date-content">
+                        <div class="date-day">17 JUILLET 2026</div>
+                        <div class="date-venue">MAD Club</div>
+                        <div class="date-city">LAUSANNE <span class="date-flag">🇨🇭</span></div>
+                        <div class="date-badge-special">Club Show</div>
+                    </div>
+                    <div class="date-pulse"></div>
+                </div>
+
+                <!-- Date 3 - ORANGE/GOLD (NOUVEAU) -->
+                <div class="tour-date-card gold" onclick="alert('Billets bientôt disponibles !')">
+                    <div class="date-glow"></div>
+                    <div class="date-content">
+                        <div class="date-day">18 JUILLET 2026</div>
+                        <div class="date-venue">Montreux Jazz Festival</div>
+                        <div class="date-city">MONTREUX <span class="date-flag">🇨🇭</span></div>
+                        <div class="date-badge-special prestige">Festival Prestige</div>
+                    </div>
+                    <div class="date-pulse"></div>
+                </div>
+
+                <!-- Date 4 - VERT -->
                 <div class="tour-date-card green" onclick="alert('Billets bientôt disponibles !')">
                     <div class="date-glow"></div>
                     <div class="date-content">
@@ -1326,7 +1370,7 @@
                     <div class="date-pulse"></div>
                 </div>
 
-                <!-- Date 3 - VIOLET (anciennement date 4) -->
+                <!-- Date 5 - VIOLET -->
                 <div class="tour-date-card purple" onclick="alert('Billets bientôt disponibles !')">
                     <div class="date-glow"></div>
                     <div class="date-content">
