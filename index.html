@@ -7,56 +7,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;500;700&family=Inter:wght@300;400;600;800&display=swap');
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         :root {
-            --primary: #ff3333;
-            --primary-dark: #cc0000;
-            --dark: #0a0a0a;
-            --darker: #050505;
-            --light: #ffffff;
-            --gray: #888888;
+            --primary: #ff3333; --primary-dark: #cc0000; --dark: #0a0a0a;
+            --darker: #050505; --light: #ffffff; --gray: #888888;
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         html { scroll-behavior: smooth; }
-
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--dark);
-            color: var(--light);
-            overflow-x: hidden;
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif; background: var(--dark); color: var(--light);
+            overflow-x: hidden; line-height: 1.6;
         }
-
         .start-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: var(--darker);
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 40px;
-            transition: opacity 0.8s ease, visibility 0.8s;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--darker); z-index: 10000; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            gap: 40px; transition: opacity 0.8s ease, visibility 0.8s;
         }
-
         .start-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         .start-logo { font-family: 'Oswald', sans-serif; font-size: 8rem; font-weight: 700; letter-spacing: 20px; animation: pulse 2s infinite; text-shadow: 0 0 60px rgba(255,51,51,0.5); }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
         .start-btn { padding: 25px 80px; background: transparent; border: 2px solid var(--primary); color: var(--primary); font-family: 'Oswald', sans-serif; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 8px; cursor: pointer; transition: var(--transition); position: relative; overflow: hidden; }
         .start-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: var(--primary); transition: left 0.4s; z-index: -1; }
         .start-btn:hover::before { left: 0; }
         .start-btn:hover { color: var(--light); transform: scale(1.05); box-shadow: 0 0 40px rgba(255,51,51,0.6); }
-
         nav { position: fixed; top: 0; width: 100%; padding: 25px 60px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); backdrop-filter: blur(20px); transition: var(--transition); border-bottom: 1px solid transparent; }
         nav.scrolled { background: rgba(5,5,5,0.98); padding: 15px 60px; border-bottom: 1px solid rgba(255,51,51,0.3); }
         .nav-left { display: flex; align-items: center; gap: 40px; }
@@ -68,100 +42,21 @@
         .nav-links a::before { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--primary); transition: width 0.3s; }
         .nav-links a:hover::before { width: 100%; }
         .nav-links a:hover { color: var(--primary); }
-
         .language-selector { position: relative; z-index: 1001; }
-
-        .lang-toggle { 
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: rgba(255,255,255,0.05); 
-            border: 1px solid rgba(255,255,255,0.2); 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 0.85rem;
-            color: var(--light);
-            transition: var(--transition); 
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        .lang-toggle:hover { 
-            background: rgba(255,255,255,0.1); 
-            border-color: var(--primary); 
-            transform: scale(1.02); 
-        }
-
+        .lang-toggle { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; font-size: 0.85rem; color: var(--light); transition: var(--transition); font-weight: 600; letter-spacing: 1px; }
+        .lang-toggle:hover { background: rgba(255,255,255,0.1); border-color: var(--primary); transform: scale(1.02); }
         .lang-toggle .lang-flag { font-size: 1.2rem; }
         .lang-toggle .lang-code { text-transform: uppercase; }
-        .lang-toggle .lang-arrow { 
-            font-size: 0.7rem; 
-            margin-left: 4px;
-            transition: transform 0.3s;
-        }
-
-        .language-selector:hover .lang-arrow {
-            transform: rotate(180deg);
-        }
-
-        .lang-bar { 
-            position: absolute; 
-            top: calc(100% + 10px); 
-            right: 0; 
-            background: rgba(10,10,10,0.98); 
-            border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 12px; 
-            padding: 8px; 
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            min-width: 180px; 
-            opacity: 0; 
-            visibility: hidden; 
-            transform: translateY(-10px); 
-            transition: all 0.3s; 
-            backdrop-filter: blur(20px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-
-        .language-selector:hover .lang-bar { 
-            opacity: 1; 
-            visibility: visible; 
-            transform: translateY(0); 
-        }
-
-        .lang-option { 
-            padding: 10px 14px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            transition: var(--transition); 
-            display: flex; 
-            align-items: center; 
-            gap: 10px;
-            font-size: 0.9rem;
-            color: var(--light);
-            text-decoration: none;
-        }
-
-        .lang-option:hover { 
-            background: rgba(255,51,51,0.2); 
-        }
-
-        .lang-option.active {
-            background: rgba(255,51,51,0.15);
-            border: 1px solid rgba(255,51,51,0.3);
-        }
-
+        .lang-toggle .lang-arrow { font-size: 0.7rem; margin-left: 4px; transition: transform 0.3s; }
+        .language-selector:hover .lang-arrow { transform: rotate(180deg); }
+        .lang-bar { position: absolute; top: calc(100% + 10px); right: 0; background: rgba(10,10,10,0.98); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 8px; display: flex; flex-direction: column; gap: 4px; min-width: 180px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s; backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .language-selector:hover .lang-bar { opacity: 1; visibility: visible; transform: translateY(0); }
+        .lang-option { padding: 10px 14px; border-radius: 8px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--light); text-decoration: none; }
+        .lang-option:hover { background: rgba(255,51,51,0.2); }
+        .lang-option.active { background: rgba(255,51,51,0.15); border: 1px solid rgba(255,51,51,0.3); }
         .lang-option .flag { font-size: 1.3rem; }
         .lang-option .name { font-weight: 500; }
-        .lang-option .code { 
-            margin-left: auto; 
-            font-size: 0.75rem; 
-            color: var(--gray);
-            font-weight: 600;
-        }
-
+        .lang-option .code { margin-left: auto; font-size: 0.75rem; color: var(--gray); font-weight: 600; }
         .hero { position: relative; height: 100vh; width: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('montagne.jpg') center/cover no-repeat; animation: kenburns 25s ease-in-out infinite alternate; filter: brightness(0.6) contrast(1.2) saturate(0.8); }
         @keyframes kenburns { 0% { transform: scale(1) translate(0, 0); } 100% { transform: scale(1.15) translate(-2%, -2%); } }
@@ -173,17 +68,14 @@
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
         .scroll-indicator { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); animation: bounce 2s infinite; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--gray); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; }
         @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(15px); } }
-
         section { position: relative; overflow: hidden; padding: 120px 60px; }
         .section-header { text-align: center; margin-bottom: 80px; }
         .section-label { display: inline-block; color: var(--primary); font-size: 0.9rem; letter-spacing: 6px; text-transform: uppercase; margin-bottom: 20px; font-weight: 600; }
         .section-title { font-family: 'Oswald', sans-serif; font-size: clamp(2.5rem, 5vw, 4rem); text-transform: uppercase; letter-spacing: 15px; position: relative; display: inline-block; }
         .section-title::after { content: ''; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); width: 80px; height: 4px; background: var(--primary); }
-
         .socials-fixed { position: fixed; left: 40px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 20px; z-index: 999; }
         .social-link { width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; color: var(--light); font-size: 1.2rem; text-decoration: none; transition: var(--transition); backdrop-filter: blur(10px); }
         .social-link:hover { background: var(--primary); border-color: var(--primary); transform: scale(1.2) translateX(10px); box-shadow: 0 0 30px rgba(255,51,51,0.4); }
-
         .single-section { min-height: 100vh; background: var(--darker); display: flex; align-items: center; position: relative; }
         .single-section::before { content: 'PEACE'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Oswald', sans-serif; font-size: 20vw; font-weight: 700; color: rgba(255,51,51,0.03); letter-spacing: 50px; white-space: nowrap; pointer-events: none; z-index: 0; }
         .single-container { max-width: 1400px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; position: relative; z-index: 1; }
@@ -193,52 +85,39 @@
         .single-title-large { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 6vw, 6rem); margin-bottom: 20px; letter-spacing: 10px; line-height: 1; color: var(--light); text-shadow: 0 0 60px rgba(255,51,51,0.3); }
         .single-year { font-size: 1.5rem; color: var(--primary); font-weight: 700; letter-spacing: 10px; margin-bottom: 30px; }
         .single-description { font-size: 1.2rem; line-height: 2; color: #aaa; margin-bottom: 40px; max-width: 500px; }
-
         .single-cover-large { width: 100%; max-width: 500px; aspect-ratio: 1; border-radius: 20px; overflow: hidden; position: relative; box-shadow: 0 60px 120px rgba(255,51,51,0.2); transition: var(--transition); border: 1px solid rgba(255,51,51,0.3); }
         .single-cover-large:hover { transform: scale(1.03); box-shadow: 0 80px 160px rgba(255,51,51,0.4); }
         .single-cover-large img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s; }
         .single-cover-large:hover img { transform: scale(1.1); }
-
         .single-actions-visual { display: flex; gap: 15px; justify-content: center; width: 100%; }
-
         .btn-primary, .btn-secondary { padding: 15px 30px; border-radius: 50px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; transition: var(--transition); display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: 0.9rem; }
         .btn-primary { background: var(--primary); color: var(--light); border: 2px solid var(--primary); }
         .btn-primary:hover { background: transparent; color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255,51,51,0.3); }
         .btn-secondary { background: transparent; color: var(--light); border: 2px solid rgba(255,255,255,0.3); }
         .btn-secondary:hover { border-color: var(--light); background: rgba(255,255,255,0.1); transform: translateY(-3px); }
 
-        .tour-section { background: var(--darker); min-height: 80vh; display: flex; flex-direction: column; align-items: center; }
+        /* ====== LECTEUR SPOTIFY ====== */
+        .spotify-player-section { background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%); padding: 80px 60px; }
+        .spotify-container { max-width: 900px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 60px rgba(0,0,0,0.8); transition: var(--transition); }
+        .spotify-container:hover { border-color: rgba(29,185,84,0.4); box-shadow: 0 20px 60px rgba(29,185,84,0.15); }
+        .spotify-container iframe { display: block; width: 100%; height: 380px; border: none; }
+        .spotify-info { text-align: center; margin-top: 30px; color: var(--gray); font-size: 0.95rem; }
+        .spotify-info i { color: #1DB954; margin-right: 8px; }
+
+        .tour-section { background: var(--darker); min-height: 60vh; display: flex; flex-direction: column; align-items: center; }
         .tour-content { text-align: center; max-width: 800px; width: 100%; }
         .tour-dates-container { display: flex; flex-direction: column; gap: 15px; width: 100%; }
         .tour-date-card { position: relative; background: rgba(255,255,255,0.02); border: 1px solid; border-radius: 15px; padding: 20px 30px; cursor: pointer; transition: all 0.4s ease; overflow: hidden; backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: space-between; text-align: left; }
-
-        .tour-date-card.red { border-color: rgba(255,51,51,0.3); }
-        .tour-date-card.blue { border-color: rgba(51,153,255,0.3); }
-        .tour-date-card.gold { border-color: rgba(255,165,0,0.3); }
         .tour-date-card.green { border-color: rgba(51,255,153,0.3); }
-        .tour-date-card.purple { border-color: rgba(153,51,255,0.3); }
-
         .tour-date-card:hover { transform: scale(1.02) translateX(10px); }
-        .tour-date-card.red:hover { box-shadow: 0 0 30px rgba(255,51,51,0.3); }
-        .tour-date-card.blue:hover { box-shadow: 0 0 30px rgba(51,153,255,0.3); }
-        .tour-date-card.gold:hover { box-shadow: 0 0 30px rgba(255,165,0,0.3); }
-
+        .tour-date-card.green:hover { box-shadow: 0 0 30px rgba(51,255,153,0.3); }
         .date-info-left { display: flex; flex-direction: column; }
         .date-day { font-family: 'Oswald', sans-serif; font-size: 1.3rem; letter-spacing: 2px; font-weight: 700; }
-        .tour-date-card.red .date-day { color: #ff3333; }
-        .tour-date-card.blue .date-day { color: #3399ff; }
-        .tour-date-card.gold .date-day { color: #ffa500; }
         .tour-date-card.green .date-day { color: #33ff99; }
-        .tour-date-card.purple .date-day { color: #9933ff; }
-
         .date-venue { font-family: 'Oswald', sans-serif; font-size: 1.2rem; color: #fff; letter-spacing: 1px; }
         .date-city { font-size: 0.9rem; color: #888; letter-spacing: 2px; text-transform: uppercase; }
-
         .date-badge-special { display: inline-block; padding: 5px 15px; border-radius: 15px; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
-        .tour-date-card.blue .date-badge-special { background: rgba(51,153,255,0.2); color: #3399ff; border: 1px solid rgba(51,153,255,0.3); }
-        .tour-date-card.red .date-badge-special { background: rgba(255,51,51,0.2); color: #ff3333; border: 1px solid rgba(255,51,51,0.3); transition: all 0.3s; }
-        .tour-date-card.red:hover .date-badge-special { background: #ff3333; color: #fff; }
-        .tour-date-card.gold .date-badge-special { background: rgba(255,165,0,0.2); color: #ffa500; border: 1px solid rgba(255,165,0,0.3); }
+        .tour-date-card.green .date-badge-special { background: rgba(51,255,153,0.2); color: #33ff99; border: 1px solid rgba(51,255,153,0.3); }
 
         .music-section { background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%); }
         .music-platforms { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1000px; margin: 0 auto; }
@@ -265,13 +144,8 @@
         .social-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 25px 40px; text-align: center; transition: var(--transition); text-decoration: none; color: var(--light); display: flex; flex-direction: column; align-items: center; min-width: 180px; }
         .social-card-icon { font-size: 2.5rem; margin-bottom: 15px; }
         .social-card-name { font-size: 1.2rem; font-family: 'Oswald', sans-serif; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; }
-
-        @keyframes pulseSuivre {
-            0%, 100% { transform: scale(1); opacity: 0.7; color: var(--gray); }
-            50% { transform: scale(1.1); opacity: 1; color: var(--primary); }
-        }
+        @keyframes pulseSuivre { 0%, 100% { transform: scale(1); opacity: 0.7; color: var(--gray); } 50% { transform: scale(1.1); opacity: 1; color: var(--primary); } }
         .social-card-action { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; animation: pulseSuivre 2s infinite; }
-
         .social-card.instagram:hover { border-color: #E4405F; box-shadow: 0 15px 30px rgba(228,64,95,0.2); }
         .social-card.instagram .social-card-icon { color: #E4405F; }
         .social-card.tiktok:hover { border-color: #00f2ea; box-shadow: 0 15px 30px rgba(0,242,234,0.2); }
@@ -287,11 +161,9 @@
         .folder-paper1 { position: absolute; bottom: 10px; left: 10%; width: 80%; height: 140px; background: #fff; border-radius: 10px; transform: rotate(-5deg); transition: var(--transition); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .folder-paper2 { position: absolute; bottom: 10px; left: 10%; width: 80%; height: 140px; background: #ccc; border-radius: 10px; transform: rotate(5deg); transition: var(--transition); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .folder-front { position: absolute; bottom: 0; left: 0; width: 100%; height: 120px; background: var(--primary); border-radius: 15px 15px 10px 10px; box-shadow: 0 10px 30px rgba(255,51,51,0.4); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: rgba(255,255,255,0.5); transition: var(--transition); transform-origin: bottom; }
-
         .folder-wrapper:hover .folder-paper1 { transform: rotate(-15deg) translateY(-20px); }
         .folder-wrapper:hover .folder-paper2 { transform: rotate(15deg) translateY(-15px); }
         .folder-wrapper:hover .folder-front { transform: rotateX(20deg); }
-
         .folder-text { font-family: 'Oswald', sans-serif; font-size: 1.5rem; letter-spacing: 3px; text-transform: uppercase; color: var(--light); }
 
         .gallery-modal { position: fixed; inset: 0; background: rgba(5,5,5,0.98); z-index: 10000; display: none; opacity: 0; transition: opacity 0.4s; overflow-y: auto; padding: 50px; }
@@ -304,18 +176,11 @@
         .gallery-item-inner:hover img { transform: scale(1.1); }
 
         #ikbot-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: row; align-items: flex-end; gap: 15px; }
-
         #ikbot-bubble { background: var(--light); color: var(--darker); padding: 15px 25px; border-radius: 20px 20px 0 20px; max-width: 280px; font-size: 0.95rem; font-weight: 600; box-shadow: 0 15px 30px rgba(0,0,0,0.6); opacity: 0; transform: scale(0.8) translateY(20px); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; position: relative; border: 2px solid var(--primary); }
         #ikbot-bubble::after { content: ''; position: absolute; bottom: 0; right: -10px; border-width: 10px 0 0 10px; border-style: solid; border-color: transparent transparent transparent var(--light); }
-
         #ikbot-bubble.show { opacity: 1; transform: scale(1) translateY(0); }
-
         #ikbot-avatar { width: 70px; height: 70px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-weight: 700; color: #fff; box-shadow: 0 10px 25px rgba(255,51,51,0.5); border: 3px solid #fff; animation: floatBot 4s ease-in-out infinite; cursor: help; }
-
-        @keyframes floatBot {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); box-shadow: 0 20px 35px rgba(255,51,51,0.6); }
-        }
+        @keyframes floatBot { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); box-shadow: 0 20px 35px rgba(255,51,51,0.6); } }
 
         .newsletter-section { background: linear-gradient(to bottom, var(--darker), #000); text-align: center; }
         .newsletter-content { max-width: 700px; margin: 0 auto; }
@@ -356,9 +221,10 @@
             #ikbot-container { right: 20px; bottom: 20px; }
             .footer-content { flex-wrap: wrap; justify-content: center; text-align: center; }
             .lang-bar { right: -50px; }
+            .spotify-container iframe { height: 380px; }
         }
     </style>
-<base target="_blank">
+    <base target="_blank">
 <base target="_blank">
 </head>
 <body>
@@ -372,13 +238,14 @@
 
     <nav id="navbar">
         <div class="nav-left">
-            <a href="#" onclick="window.location.reload(); return false;" class="logo">IK</a>
+            <a href="#" onclick="window.location.reload(); return false;" class="logo" target="_self">IK</a>
             <ul class="nav-links">
-                <li><a href="#single" data-i18n="navSingle">Nouveau Single</a></li>
-                <li><a href="#music" data-i18n="navMusic">Musiques</a></li>
-                <li><a href="#tour" data-i18n="navTour">Tournée</a></li>
-                <li><a href="#bio" data-i18n="navBio">Bio</a></li>
-                <li><a href="#gallery" data-i18n="navGallery">Photos</a></li>
+                <li><a href="#single" data-i18n="navSingle" target="_self">Nouveau Single</a></li>
+                <li><a href="#spotify" data-i18n="navListen" target="_self">Écouter</a></li>
+                <li><a href="#music" data-i18n="navMusic" target="_self">Musiques</a></li>
+                <li><a href="#tour" data-i18n="navTour" target="_self">Tournée</a></li>
+                <li><a href="#bio" data-i18n="navBio" target="_self">Bio</a></li>
+                <li><a href="#gallery" data-i18n="navGallery" target="_self">Photos</a></li>
             </ul>
         </div>
 
@@ -390,34 +257,22 @@
             </div>
             <div class="lang-bar" id="langBar">
                 <div class="lang-option active" onclick="changeLanguage('fr')" data-lang="fr">
-                    <span class="flag">🇫🇷</span>
-                    <span class="name">Français</span>
-                    <span class="code">FR</span>
+                    <span class="flag">🇫🇷</span><span class="name">Français</span><span class="code">FR</span>
                 </div>
                 <div class="lang-option" onclick="changeLanguage('en')" data-lang="en">
-                    <span class="flag">🇬🇧</span>
-                    <span class="name">English</span>
-                    <span class="code">EN</span>
+                    <span class="flag">🇬🇧</span><span class="name">English</span><span class="code">EN</span>
                 </div>
                 <div class="lang-option" onclick="changeLanguage('it')" data-lang="it">
-                    <span class="flag">🇮🇹</span>
-                    <span class="name">Italiano</span>
-                    <span class="code">IT</span>
+                    <span class="flag">🇮🇹</span><span class="name">Italiano</span><span class="code">IT</span>
                 </div>
                 <div class="lang-option" onclick="changeLanguage('de')" data-lang="de">
-                    <span class="flag">🇩🇪</span>
-                    <span class="name">Deutsch</span>
-                    <span class="code">DE</span>
+                    <span class="flag">🇩🇪</span><span class="name">Deutsch</span><span class="code">DE</span>
                 </div>
                 <div class="lang-option" onclick="changeLanguage('ln')" data-lang="ln">
-                    <span class="flag">🇨🇩</span>
-                    <span class="name">Lingala</span>
-                    <span class="code">LN</span>
+                    <span class="flag">🇨🇩</span><span class="name">Lingala</span><span class="code">LN</span>
                 </div>
                 <div class="lang-option" onclick="changeLanguage('pt')" data-lang="pt">
-                    <span class="flag">🇵🇹</span>
-                    <span class="name">Português</span>
-                    <span class="code">PT</span>
+                    <span class="flag">🇵🇹</span><span class="name">Português</span><span class="code">PT</span>
                 </div>
             </div>
         </div>
@@ -431,14 +286,12 @@
     <section class="hero">
         <div class="hero-bg"></div>
         <div class="hero-overlay"></div>
-
         <div class="hero-content">
             <div class="hero-label" data-i18n="heroLabel">Nouveau Single</div>
             <h1 class="hero-title">PEACE FOR MY MADA</h1>
             <p class="hero-subtitle" data-i18n="heroSubtitle">Disponible sur toutes les plateformes</p>
         </div>
-
-        <div class="scroll-indicator" onclick="document.getElementById('single').scrollIntoView({behavior: 'smooth'})">
+        <div class="scroll-indicator" onclick="document.getElementById('single').scrollIntoView({behavior:'smooth'})">
             <span data-i18n="scrollDiscover">Découvrir</span>
             <i class="fas fa-chevron-down"></i>
         </div>
@@ -451,11 +304,10 @@
                     <img src="peace-cover.jpg" alt="Peace For My Mada Single Cover" onerror="this.src='data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Crect fill='%23111' width='600' height='600'/%3E%3Ctext fill='%23ff3333' font-family='Oswald' font-size='50' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3EPEACE FOR MY MADA%3C/text%3E%3C/svg%3E'">
                 </div>
                 <div class="single-actions-visual">
-                    <a href="#" class="btn-primary" target="_blank"><i class="fas fa-play"></i> <span data-i18n="btnListen">Écouter maintenant</span></a>
-                    <a href="#" class="btn-secondary" target="_blank"><i class="fab fa-apple"></i> Apple Music</a>
+                    <a href="#spotify" class="btn-primary" target="_self"><i class="fas fa-play"></i> <span data-i18n="btnListen">Écouter maintenant</span></a>
+                    <a href="#spotify" class="btn-secondary" target="_self"><i class="fab fa-spotify"></i> Spotify</a>
                 </div>
             </div>
-
             <div class="single-content reveal">
                 <div class="single-badge" data-i18n="badgeNew">Nouveau Single</div>
                 <h2 class="single-title-large">PEACE FOR MY MADA</h2>
@@ -469,26 +321,40 @@
         </div>
     </section>
 
+    <!-- ====== LECTEUR SPOTIFY INTÉGRÉ ====== -->
+    <section class="spotify-player-section" id="spotify">
+        <div class="section-header reveal">
+            <div class="section-label" data-i18n="labelListen">Écoute</div>
+            <h2 class="section-title" data-i18n="titleListenNow">Écoute sur Spotify</h2>
+        </div>
+        <div class="spotify-container reveal">
+            <iframe 
+                src="https://open.spotify.com/embed/playlist/2QsxrcxNpJvbGjA7AKKDgq?utm_source=generator&theme=0" 
+                allowfullscreen="" 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                loading="lazy">
+            </iframe>
+        </div>
+        <p class="spotify-info reveal"><i class="fab fa-spotify"></i> <span data-i18n="spotifyInfo">Écoute directement depuis Spotify sans quitter le site</span></p>
+    </section>
+
     <section class="music-section" id="music">
         <div class="section-header reveal">
             <div class="section-label" data-i18n="labelStreaming">Streaming</div>
             <h2 class="section-title" data-i18n="titleMusic">Musiques</h2>
         </div>
-
         <div class="music-platforms reveal">
-            <a href="#" class="platform-card" target="_blank">
+            <a href="#spotify" class="platform-card" target="_self">
                 <i class="fab fa-spotify platform-icon" style="color: #1DB954;"></i>
                 <h3 class="platform-name">Spotify</h3>
                 <p class="platform-action" data-i18n="actionListen">Écouter</p>
             </a>
-
-            <a href="#" class="platform-card" target="_blank">
+            <a href="#" class="platform-card">
                 <i class="fab fa-apple platform-icon" style="color: #FA243C;"></i>
                 <h3 class="platform-name">Apple Music</h3>
                 <p class="platform-action" data-i18n="actionListen">Écouter</p>
             </a>
-
-            <a href="#" class="platform-card" target="_blank">
+            <a href="#" class="platform-card">
                 <i class="fab fa-soundcloud platform-icon" style="color: #FF5500;"></i>
                 <h3 class="platform-name">SoundCloud</h3>
                 <p class="platform-action" data-i18n="actionListen">Écouter</p>
@@ -502,38 +368,13 @@
                 <div class="section-label" data-i18n="labelLive">Live</div>
                 <h2 class="section-title" data-i18n="titleTour">Tournée</h2>
             </div>
-
             <div class="tour-dates-container">
-                <div class="tour-date-card red" onclick="window.open('https://www.mad.club/agenda/', '_blank')">
-                    <div class="date-info-left">
-                        <div class="date-day">17 JUIN 2026</div>
-                        <div class="date-venue">MAD Club <span class="date-city">- LAUSANNE 🇨🇭</span></div>
-                    </div>
-                    <div class="date-badge-special" data-i18n="badgeClub">Club Show / Réserver</div>
-                </div>
-
-                <div class="tour-date-card gold">
-                    <div class="date-info-left">
-                        <div class="date-day">18 JUILLET 2026</div>
-                        <div class="date-venue">Montreux Jazz Festival <span class="date-city">- MONTREUX 🇨🇭</span></div>
-                    </div>
-                    <div class="date-badge-special" data-i18n="badgeFestival">Festival Prestige</div>
-                </div>
-
                 <div class="tour-date-card green">
                     <div class="date-info-left">
                         <div class="date-day">15 AOÛT 2026</div>
                         <div class="date-venue">Semana Cultural <span class="date-city">- AÇORES 🇵🇹</span></div>
                     </div>
                     <div class="date-badge-special" data-i18n="badgeFestival2">Festival</div>
-                </div>
-
-                <div class="tour-date-card purple">
-                    <div class="date-info-left">
-                        <div class="date-day">06 OCTOBRE 2026</div>
-                        <div class="date-venue">Théâtre des Champs-Élysées <span class="date-city">- PARIS 🇫🇷</span></div>
-                    </div>
-                    <div class="date-badge-special" data-i18n="badgeConcert">Concert Prestige</div>
                 </div>
             </div>
         </div>
@@ -544,11 +385,9 @@
             <div class="bio-portrait reveal">
                 <img src="bio-photo.jpg" alt="Ivan Kandu" onerror="this.parentElement.innerHTML='<div style='width:100%;height:500px;display:flex;align-items:center;justify-content:center;background:#222;color:#666;text-align:center;padding:20px;'>Photo Artiste</div>'">
             </div>
-
             <div class="bio-content reveal">
                 <h2>Ivan Kandu</h2>
                 <div class="bio-role" data-i18n="bioRole">Artiste • Chanteur • Compositeur</div>
-
                 <p class="bio-text" data-i18n="bioText1">
                     Né le 12 janvier 1993 en République démocratique du Congo, <strong>Ivan Kandu</strong> est un artiste suisse au parcours vibrant et multiculturel. Arrivé en Suisse en 2006, il grandit entre le Tessin et le canton de Vaud, où il forge son identité artistique unique.
                 </p>
@@ -564,21 +403,18 @@
             <div class="section-label" data-i18n="labelConnect">Connectons-nous</div>
             <h2 class="section-title" data-i18n="titleSocial">Réseaux Sociaux</h2>
         </div>
-
         <div class="social-platforms reveal">
-            <a href="https://www.instagram.com/ik_ivk" class="social-card instagram" target="_blank">
+            <a href="https://www.instagram.com/ik_ivk" class="social-card instagram">
                 <i class="fab fa-instagram social-card-icon"></i>
                 <h3 class="social-card-name">Instagram</h3>
                 <span class="social-card-action" data-i18n="actionFollow">Suivre</span>
             </a>
-
-            <a href="https://www.tiktok.com/@ik_ivk" class="social-card tiktok" target="_blank">
+            <a href="https://www.tiktok.com/@ik_ivk" class="social-card tiktok">
                 <i class="fab fa-tiktok social-card-icon"></i>
                 <h3 class="social-card-name">TikTok</h3>
                 <span class="social-card-action" data-i18n="actionFollow">Suivre</span>
             </a>
-
-            <a href="#" class="social-card facebook" target="_blank">
+            <a href="#" class="social-card facebook">
                 <i class="fab fa-facebook-f social-card-icon"></i>
                 <h3 class="social-card-name">Facebook</h3>
                 <span class="social-card-action" data-i18n="actionFollow">Suivre</span>
@@ -591,7 +427,6 @@
             <div class="section-label" data-i18n="labelMedia">Médias</div>
             <h2 class="section-title" data-i18n="titleGallery">Galerie Photos</h2>
         </div>
-
         <div class="folder-wrapper reveal" onclick="openGalleryModal()">
             <div class="folder-icon-container">
                 <div class="folder-back"></div>
@@ -619,12 +454,10 @@
         <div class="newsletter-content reveal">
             <h2 class="newsletter-title" data-i18n="newsTitle">Rejoins le Mouvement</h2>
             <p class="newsletter-subtitle" data-i18n="newsSubtitle">Inscris-toi pour recevoir en exclusivité les nouveaux morceaux et actualités.</p>
-
-            <form action="TON_LIEN_ICI" method="POST" class="newsletter-form-premium" target="_blank">
+            <form action="TON_LIEN_ICI" method="POST" class="newsletter-form-premium">
                 <input type="email" name="EMAIL" class="newsletter-input-premium" placeholder="Ton adresse email" data-i18n-placeholder="placeholderEmail" required>
                 <button type="submit" class="newsletter-btn-premium" data-i18n="btnSubscribe">S'inscrire</button>
             </form>
-
             <p class="newsletter-guarantee"><i class="fas fa-lock"></i> <span data-i18n="newsGuarantee">Pas de spam, désinscription possible à tout moment</span></p>
         </div>
     </section>
@@ -647,8 +480,8 @@
         <div class="footer-bottom">
             <p data-i18n="footerCopy">© 2026 Ivan Kandu (IK). Tous droits réservés.</p>
             <div class="footer-socials">
-                <a href="https://instagram.com/ik_ivk" target="_blank"><i class="fab fa-instagram"></i></a>
-                <a href="https://tiktok.com/@ik_ivk" target="_blank"><i class="fab fa-tiktok"></i></a>
+                <a href="https://instagram.com/ik_ivk"><i class="fab fa-instagram"></i></a>
+                <a href="https://tiktok.com/@ik_ivk"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
     </footer>
@@ -657,11 +490,8 @@
         const translations = {
             fr: {
                 startBtn: "Entrer dans l'univers",
-                navSingle: "Nouveau Single",
-                navMusic: "Musiques",
-                navTour: "Tournée",
-                navBio: "Bio",
-                navGallery: "Photos",
+                navSingle: "Nouveau Single", navListen: "Écouter", navMusic: "Musiques",
+                navTour: "Tournée", navBio: "Bio", navGallery: "Photos",
                 botIntro: "Salut ! Je suis IKbot, je te tiendrai au courant des actus !",
                 heroLabel: "Nouveau Single",
                 heroSubtitle: "Disponible sur toutes les plateformes",
@@ -669,41 +499,28 @@
                 btnListen: "Écouter maintenant",
                 badgeNew: "Nouveau Single",
                 singleDesc: "Un hommage puissant et sincère dédié à celle qui a tout donné. Peace For My Mada révèle toute l'émotion et la profondeur d'IK dans un single touchant.",
-                labelStreaming: "Streaming",
-                titleMusic: "Musiques",
-                actionListen: "Écouter",
-                labelLive: "Live",
-                titleTour: "Tournée",
-                badgeClub: "Club Show / Réserver",
-                badgeFestival: "Festival Prestige",
+                labelListen: "Écoute", titleListenNow: "Écoute sur Spotify",
+                spotifyInfo: "Écoute directement depuis Spotify sans quitter le site",
+                labelStreaming: "Streaming", titleMusic: "Musiques", actionListen: "Écouter",
+                labelLive: "Live", titleTour: "Tournée",
                 badgeFestival2: "Festival",
-                badgeConcert: "Concert Prestige",
                 bioRole: "Artiste • Chanteur • Compositeur",
                 bioText1: "Né le 12 janvier 1993 en République démocratique du Congo, <strong>Ivan Kandu</strong> est un artiste suisse au parcours vibrant et multiculturel. Arrivé en Suisse en 2006, il grandit entre le Tessin et le canton de Vaud, où il forge son identité artistique unique.",
                 bioText2: "Son histoire avec la musique commence très tôt : à seulement 10 ans, il devient la voix solo de la chorale « Les Anges du Seigneur ». Cette première scène révèle une présence naturelle et une puissance vocale. Influencé par le <strong>RnB</strong>, la <strong>Rumba</strong>, la <strong>Pop</strong> et l'<strong>Afropop</strong>, Ivan écrit et compose en français, italien, lingala et anglais.",
-                labelConnect: "Connectons-nous",
-                titleSocial: "Réseaux Sociaux",
-                actionFollow: "Suivre",
-                labelMedia: "Médias",
-                titleGallery: "Galerie Photos",
-                folderOpen: "Ouvrir l'album",
+                labelConnect: "Connectons-nous", titleSocial: "Réseaux Sociaux", actionFollow: "Suivre",
+                labelMedia: "Médias", titleGallery: "Galerie Photos", folderOpen: "Ouvrir l'album",
                 newsTitle: "Rejoins le Mouvement",
                 newsSubtitle: "Inscris-toi pour recevoir en exclusivité les nouveaux morceaux et actualités.",
-                placeholderEmail: "Ton adresse email",
-                btnSubscribe: "S'inscrire",
+                placeholderEmail: "Ton adresse email", btnSubscribe: "S'inscrire",
                 newsGuarantee: "Pas de spam, désinscription possible à tout moment",
-                footerContact: "Contact / Pro",
-                footerManager: "Manager: Jessica Perrin",
+                footerContact: "Contact / Pro", footerManager: "Manager: Jessica Perrin",
                 footerTagline: "Musique sans frontières.<br>Un voyage entre l'Afrique et l'Europe.",
                 footerCopy: "© 2026 Ivan Kandu (IK). Tous droits réservés."
             },
             en: {
                 startBtn: "Enter the Universe",
-                navSingle: "New Single",
-                navMusic: "Music",
-                navTour: "Tour",
-                navBio: "Bio",
-                navGallery: "Photos",
+                navSingle: "New Single", navListen: "Listen", navMusic: "Music",
+                navTour: "Tour", navBio: "Bio", navGallery: "Photos",
                 botIntro: "Hi! I'm IKbot, I'll keep you updated on the latest news!",
                 heroLabel: "New Single",
                 heroSubtitle: "Available on all platforms",
@@ -711,41 +528,28 @@
                 btnListen: "Listen now",
                 badgeNew: "New Single",
                 singleDesc: "A powerful and sincere tribute dedicated to the one who gave everything. Peace For My Mada reveals all the emotion and depth of IK in a touching single.",
-                labelStreaming: "Streaming",
-                titleMusic: "Music",
-                actionListen: "Listen",
-                labelLive: "Live",
-                titleTour: "Tour",
-                badgeClub: "Club Show / Book",
-                badgeFestival: "Prestige Festival",
+                labelListen: "Listen", titleListenNow: "Listen on Spotify",
+                spotifyInfo: "Listen directly from Spotify without leaving the site",
+                labelStreaming: "Streaming", titleMusic: "Music", actionListen: "Listen",
+                labelLive: "Live", titleTour: "Tour",
                 badgeFestival2: "Festival",
-                badgeConcert: "Prestige Concert",
                 bioRole: "Artist • Singer • Songwriter",
                 bioText1: "Born on January 12, 1993, in the Democratic Republic of Congo, <strong>Ivan Kandu</strong> is a Swiss artist with a vibrant and multicultural journey. Arriving in Switzerland in 2006, he grew up between Ticino and the canton of Vaud, where he forged his unique artistic identity.",
                 bioText2: "His story with music begins very early: at just 10 years old, he becomes the solo voice of the choir « Les Anges du Seigneur ». This first stage reveals a natural presence and vocal power. Influenced by <strong>RnB</strong>, <strong>Rumba</strong>, <strong>Pop</strong> and <strong>Afropop</strong>, Ivan writes and composes in French, Italian, Lingala and English.",
-                labelConnect: "Let's Connect",
-                titleSocial: "Social Networks",
-                actionFollow: "Follow",
-                labelMedia: "Media",
-                titleGallery: "Photo Gallery",
-                folderOpen: "Open album",
+                labelConnect: "Let's Connect", titleSocial: "Social Networks", actionFollow: "Follow",
+                labelMedia: "Media", titleGallery: "Photo Gallery", folderOpen: "Open album",
                 newsTitle: "Join the Movement",
                 newsSubtitle: "Sign up to exclusively receive new tracks and news.",
-                placeholderEmail: "Your email address",
-                btnSubscribe: "Subscribe",
+                placeholderEmail: "Your email address", btnSubscribe: "Subscribe",
                 newsGuarantee: "No spam, unsubscribe at any time",
-                footerContact: "Contact / Pro",
-                footerManager: "Manager: Jessica Perrin",
+                footerContact: "Contact / Pro", footerManager: "Manager: Jessica Perrin",
                 footerTagline: "Music without borders.<br>A journey between Africa and Europe.",
                 footerCopy: "© 2026 Ivan Kandu (IK). All rights reserved."
             },
             it: {
                 startBtn: "Entra nell'Universo",
-                navSingle: "Nuovo Singolo",
-                navMusic: "Musica",
-                navTour: "Tour",
-                navBio: "Bio",
-                navGallery: "Foto",
+                navSingle: "Nuovo Singolo", navListen: "Ascolta", navMusic: "Musica",
+                navTour: "Tour", navBio: "Bio", navGallery: "Foto",
                 botIntro: "Ciao! Sono IKbot, ti terrò aggiornato sulle novità!",
                 heroLabel: "Nuovo Singolo",
                 heroSubtitle: "Disponibile su tutte le piattaforme",
@@ -753,41 +557,28 @@
                 btnListen: "Ascolta ora",
                 badgeNew: "Nuovo Singolo",
                 singleDesc: "Un omaggio potente e sincero dedicato a chi ha dato tutto. Peace For My Mada rivela tutta l'emozione e la profondità di IK in un singolo toccante.",
-                labelStreaming: "Streaming",
-                titleMusic: "Musica",
-                actionListen: "Ascolta",
-                labelLive: "Live",
-                titleTour: "Tour",
-                badgeClub: "Club Show / Prenota",
-                badgeFestival: "Festival Prestigio",
+                labelListen: "Ascolta", titleListenNow: "Ascolta su Spotify",
+                spotifyInfo: "Ascolta direttamente da Spotify senza uscire dal sito",
+                labelStreaming: "Streaming", titleMusic: "Musica", actionListen: "Ascolta",
+                labelLive: "Live", titleTour: "Tour",
                 badgeFestival2: "Festival",
-                badgeConcert: "Concerto Prestigio",
                 bioRole: "Artista • Cantante • Compositore",
                 bioText1: "Nato il 12 gennaio 1993 nella Repubblica Democratica del Congo, <strong>Ivan Kandu</strong> è un artista svizzero con un percorso vibrante e multiculturale. Arrivato in Svizzera nel 2006, cresce tra il Ticino e il Canton Vaud, dove forgia la sua identità artistica unica.",
                 bioText2: "La sua storia con la musica inizia molto presto: a soli 10 anni, diventa la voce solista del coro « Les Anges du Seigneur ». Questa prima scena rivela una presenza naturale e una potenza vocale. Influenzato dal <strong>RnB</strong>, la <strong>Rumba</strong>, la <strong>Pop</strong> e l'<strong>Afropop</strong>, Ivan scrive e compone in francese, italiano, lingala e inglese.",
-                labelConnect: "Connettiamoci",
-                titleSocial: "Social Network",
-                actionFollow: "Segui",
-                labelMedia: "Media",
-                titleGallery: "Galleria Foto",
-                folderOpen: "Apri album",
+                labelConnect: "Connettiamoci", titleSocial: "Social Network", actionFollow: "Segui",
+                labelMedia: "Media", titleGallery: "Galleria Foto", folderOpen: "Apri album",
                 newsTitle: "Unisciti al Movimento",
                 newsSubtitle: "Iscriviti per ricevere in esclusiva i nuovi brani e le novità.",
-                placeholderEmail: "Il tuo indirizzo email",
-                btnSubscribe: "Iscriviti",
+                placeholderEmail: "Il tuo indirizzo email", btnSubscribe: "Iscriviti",
                 newsGuarantee: "Nessuno spam, disiscrizione possibile in qualsiasi momento",
-                footerContact: "Contatto / Pro",
-                footerManager: "Manager: Jessica Perrin",
+                footerContact: "Contatto / Pro", footerManager: "Manager: Jessica Perrin",
                 footerTagline: "Musica senza confini.<br>Un viaggio tra l'Africa e l'Europa.",
                 footerCopy: "© 2026 Ivan Kandu (IK). Tutti i diritti riservati."
             },
             de: {
                 startBtn: "Betrete das Universum",
-                navSingle: "Neue Single",
-                navMusic: "Musik",
-                navTour: "Tour",
-                navBio: "Bio",
-                navGallery: "Fotos",
+                navSingle: "Neue Single", navListen: "Anhören", navMusic: "Musik",
+                navTour: "Tour", navBio: "Bio", navGallery: "Fotos",
                 botIntro: "Hallo! Ich bin IKbot, ich halte dich auf dem Laufenden!",
                 heroLabel: "Neue Single",
                 heroSubtitle: "Auf allen Plattformen verfügbar",
@@ -795,41 +586,28 @@
                 btnListen: "Jetzt anhören",
                 badgeNew: "Neue Single",
                 singleDesc: "Eine kraftvolle und aufrichtige Hommage an diejenige, die alles gegeben hat. Peace For My Mada enthüllt die ganze Emotion und Tiefe von IK in einer berührenden Single.",
-                labelStreaming: "Streaming",
-                titleMusic: "Musik",
-                actionListen: "Anhören",
-                labelLive: "Live",
-                titleTour: "Tour",
-                badgeClub: "Club Show / Buchen",
-                badgeFestival: "Prestige Festival",
+                labelListen: "Anhören", titleListenNow: "Auf Spotify anhören",
+                spotifyInfo: "Höre direkt von Spotify, ohne die Seite zu verlassen",
+                labelStreaming: "Streaming", titleMusic: "Musik", actionListen: "Anhören",
+                labelLive: "Live", titleTour: "Tour",
                 badgeFestival2: "Festival",
-                badgeConcert: "Prestige Konzert",
                 bioRole: "Künstler • Sänger • Komponist",
                 bioText1: "Geboren am 12. Januar 1993 in der Demokratischen Republik Kongo, ist <strong>Ivan Kandu</strong> ein Schweizer Künstler mit einer lebendigen und multikulturellen Reise. 2006 in die Schweiz gekommen, wächst er zwischen dem Tessin und dem Kanton Waadt auf, wo er seine einzigartige künstlerische Identität schmiedet.",
                 bioText2: "Seine Geschichte mit der Musik beginnt sehr früh: Mit nur 10 Jahren wird er zur Solostimme des Chores « Les Anges du Seigneur ». Diese erste Bühne offenbart eine natürliche Präsenz und eine stimmliche Kraft. Beeinflusst von <strong>RnB</strong>, <strong>Rumba</strong>, <strong>Pop</strong> und <strong>Afropop</strong>, schreibt und komponiert Ivan auf Französisch, Italienisch, Lingala und Englisch.",
-                labelConnect: "Lass uns verbinden",
-                titleSocial: "Soziale Netzwerke",
-                actionFollow: "Folgen",
-                labelMedia: "Medien",
-                titleGallery: "Fotogalerie",
-                folderOpen: "Album öffnen",
+                labelConnect: "Lass uns verbinden", titleSocial: "Soziale Netzwerke", actionFollow: "Folgen",
+                labelMedia: "Medien", titleGallery: "Fotogalerie", folderOpen: "Album öffnen",
                 newsTitle: "Bewegung beitreten",
                 newsSubtitle: "Melde dich an, um exklusiv neue Songs und Neuigkeiten zu erhalten.",
-                placeholderEmail: "Deine E-Mail-Adresse",
-                btnSubscribe: "Anmelden",
+                placeholderEmail: "Deine E-Mail-Adresse", btnSubscribe: "Anmelden",
                 newsGuarantee: "Kein Spam, jederzeit abmelden möglich",
-                footerContact: "Kontakt / Pro",
-                footerManager: "Manager: Jessica Perrin",
+                footerContact: "Kontakt / Pro", footerManager: "Manager: Jessica Perrin",
                 footerTagline: "Musik ohne Grenzen.<br>Eine Reise zwischen Afrika und Europa.",
                 footerCopy: "© 2026 Ivan Kandu (IK). Alle Rechte vorbehalten."
             },
             ln: {
                 startBtn: "Kota na Mokili",
-                navSingle: "Single ya Sika",
-                navMusic: "Miziki",
-                navTour: "Tour",
-                navBio: "Bio",
-                navGallery: "Bafoto",
+                navSingle: "Single ya Sika", navListen: "Yoka", navMusic: "Miziki",
+                navTour: "Tour", navBio: "Bio", navGallery: "Bafoto",
                 botIntro: "Mbote! Nazali IKbot, nakokendebisa yo na ba nouvelles!",
                 heroLabel: "Single ya Sika",
                 heroSubtitle: "Ezali na ba plateformes nionso",
@@ -837,41 +615,28 @@
                 btnListen: "Yoka sik'awa",
                 badgeNew: "Single ya Sika",
                 singleDesc: "Hommage ya makasi mpe ya solo oyo etaleli mwasi oyo apesaki nionso. Peace For My Mada elongoli emotion nionso mpe profondeur ya IK na single oyo ezali na mawa.",
-                labelStreaming: "Streaming",
-                titleMusic: "Miziki",
-                actionListen: "Yoka",
-                labelLive: "Live",
-                titleTour: "Tour",
-                badgeClub: "Club Show / Réservation",
-                badgeFestival: "Festival ya Prestige",
+                labelListen: "Yoka", titleListenNow: "Yoka na Spotify",
+                spotifyInfo: "Yoka directement na Spotify sans quitter site",
+                labelStreaming: "Streaming", titleMusic: "Miziki", actionListen: "Yoka",
+                labelLive: "Live", titleTour: "Tour",
                 badgeFestival2: "Festival",
-                badgeConcert: "Concert ya Prestige",
                 bioRole: "Artiste • Mopayi • Mocompositeur",
                 bioText1: "Abotama na 12 janvier 1993 na Republique Democratique du Congo, <strong>Ivan Kandu</strong> azali artiste suisse na parcours oyo ezali na boule mpe na ba cultures mingi. Akóti na Suisse na 2006, akulaka na kati ya Tessin mpe canton ya Vaud, wapi akomaki identité artistique na ye ya solo.",
                 bioText2: "Histoire na ye na miziki ebandaka noki: na mbula 10 kaka, azali voix solo ya chorale « Les Anges du Seigneur ». Scène ya liboso elongoli présence naturelle mpe puissance vocale. Influencé na <strong>RnB</strong>, <strong>Rumba</strong>, <strong>Pop</strong> mpe <strong>Afropop</strong>, Ivan akomaka na français, italien, lingala mpe anglais.",
-                labelConnect: "Tokokani",
-                titleSocial: "Ba Réseaux Sociaux",
-                actionFollow: "Suivre",
-                labelMedia: "Médias",
-                titleGallery: "Galerie ya Ba Photo",
-                folderOpen: "Fungola album",
+                labelConnect: "Tokokani", titleSocial: "Ba Réseaux Sociaux", actionFollow: "Suivre",
+                labelMedia: "Médias", titleGallery: "Galerie ya Ba Photo", folderOpen: "Fungola album",
                 newsTitle: "Kota na Mouvement",
                 newsSubtitle: "Inscris-toi mpo na kozwa ba exclusivité ya ba nouveaux morceaux mpe ba actualités.",
-                placeholderEmail: "Adresse email na yo",
-                btnSubscribe: "S'inscrire",
+                placeholderEmail: "Adresse email na yo", btnSubscribe: "S'inscrire",
                 newsGuarantee: "Spam te, désinscription ezali na n'importe quand",
-                footerContact: "Contact / Pro",
-                footerManager: "Manager: Jessica Perrin",
+                footerContact: "Contact / Pro", footerManager: "Manager: Jessica Perrin",
                 footerTagline: "Miziki sans frontières.<br>Voyage na kati ya Afrique mpe Europe.",
                 footerCopy: "© 2026 Ivan Kandu (IK). Ba droits nionso ezali réservés."
             },
             pt: {
                 startBtn: "Entrar no Universo",
-                navSingle: "Novo Single",
-                navMusic: "Músicas",
-                navTour: "Tour",
-                navBio: "Bio",
-                navGallery: "Fotos",
+                navSingle: "Novo Single", navListen: "Ouvir", navMusic: "Músicas",
+                navTour: "Tour", navBio: "Bio", navGallery: "Fotos",
                 botIntro: "Olá! Sou o IKbot, vou manter-te atualizado sobre as novidades!",
                 heroLabel: "Novo Single",
                 heroSubtitle: "Disponível em todas as plataformas",
@@ -879,31 +644,21 @@
                 btnListen: "Ouvir agora",
                 badgeNew: "Novo Single",
                 singleDesc: "Uma homenagem poderosa e sincera dedicada àquela que deu tudo. Peace For My Mada revela toda a emoção e profundidade de IK num single tocante.",
-                labelStreaming: "Streaming",
-                titleMusic: "Músicas",
-                actionListen: "Ouvir",
-                labelLive: "Live",
-                titleTour: "Tour",
-                badgeClub: "Club Show / Reservar",
-                badgeFestival: "Festival Prestígio",
+                labelListen: "Ouvir", titleListenNow: "Ouvir no Spotify",
+                spotifyInfo: "Ouve diretamente do Spotify sem sair do site",
+                labelStreaming: "Streaming", titleMusic: "Músicas", actionListen: "Ouvir",
+                labelLive: "Live", titleTour: "Tour",
                 badgeFestival2: "Festival",
-                badgeConcert: "Concerto Prestígio",
                 bioRole: "Artista • Cantor • Compositor",
                 bioText1: "Nascido a 12 de janeiro de 1993 na República Democrática do Congo, <strong>Ivan Kandu</strong> é um artista suíço com um percurso vibrante e multicultural. Chegou à Suíça em 2006, cresceu entre o Ticino e o cantão de Vaud, onde forjou a sua identidade artística única.",
                 bioText2: "A sua história com a música começa muito cedo: aos apenas 10 anos, torna-se a voz solo do coro « Les Anges du Seigneur ». Este primeiro palco revela uma presença natural e um poder vocal. Influenciado pelo <strong>RnB</strong>, a <strong>Rumba</strong>, a <strong>Pop</strong> e o <strong>Afropop</strong>, Ivan escreve e compõe em francês, italiano, lingala e inglês.",
-                labelConnect: "Vamos Conectar",
-                titleSocial: "Redes Sociais",
-                actionFollow: "Seguir",
-                labelMedia: "Média",
-                titleGallery: "Galeria de Fotos",
-                folderOpen: "Abrir álbum",
+                labelConnect: "Vamos Conectar", titleSocial: "Redes Sociais", actionFollow: "Seguir",
+                labelMedia: "Média", titleGallery: "Galeria de Fotos", folderOpen: "Abrir álbum",
                 newsTitle: "Junta-te ao Movimento",
                 newsSubtitle: "Inscreve-te para receber em exclusividade as novas faixas e novidades.",
-                placeholderEmail: "O teu endereço de email",
-                btnSubscribe: "Inscrever",
+                placeholderEmail: "O teu endereço de email", btnSubscribe: "Inscrever",
                 newsGuarantee: "Sem spam, cancelamento possível a qualquer momento",
-                footerContact: "Contacto / Pro",
-                footerManager: "Manager: Jessica Perrin",
+                footerContact: "Contacto / Pro", footerManager: "Manager: Jessica Perrin",
                 footerTagline: "Música sem fronteiras.<br>Uma viagem entre África e Europa.",
                 footerCopy: "© 2026 Ivan Kandu (IK). Todos os direitos reservados."
             }
@@ -924,33 +679,23 @@
             currentLang = lang;
             const t = translations[lang];
             const config = langConfig[lang];
-
             document.getElementById('langToggle').innerHTML = `
                 <span class="lang-flag">${config.flag}</span>
                 <span class="lang-code">${config.code}</span>
                 <i class="fas fa-chevron-down lang-arrow"></i>
             `;
-
             document.querySelectorAll('.lang-option').forEach(opt => {
                 opt.classList.toggle('active', opt.dataset.lang === lang);
             });
-
             document.documentElement.lang = lang === 'ln' ? 'ln' : lang;
-
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.dataset.i18n;
-                if (t[key]) {
-                    el.innerHTML = t[key];
-                }
+                if (t[key]) el.innerHTML = t[key];
             });
-
             document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
                 const key = el.dataset.i18nPlaceholder;
-                if (t[key]) {
-                    el.placeholder = t[key];
-                }
+                if (t[key]) el.placeholder = t[key];
             });
-
             updateBotMessages(lang);
             localStorage.setItem('ik-lang', lang);
         }
@@ -958,7 +703,7 @@
         const botMessagesByLang = {
             fr: [
                 "🎵 Mon nouveau single 'PEACE FOR MY MADA' est sorti ! L'as-tu écouté ?",
-                "🔥 Je serai en live au MAD Club le 17 Juin, prends ta place !",
+                "🔥 Prochain rendez-vous : Semana Cultural aux Açores le 15 Août !",
                 "👉 N'oublie pas de me suivre sur TikTok et Instagram pour les coulisses.",
                 "🎧 Retrouve tous mes sons sur Spotify et Apple Music.",
                 "📸 Jette un oeil à mon dossier photo dans la section Médias !",
@@ -966,7 +711,7 @@
             ],
             en: [
                 "🎵 My new single 'PEACE FOR MY MADA' is out! Have you listened to it?",
-                "🔥 I'll be live at MAD Club on June 17th, get your ticket!",
+                "🔥 Next stop: Semana Cultural in the Azores on August 15th!",
                 "👉 Don't forget to follow me on TikTok and Instagram for behind the scenes.",
                 "🎧 Find all my tracks on Spotify and Apple Music.",
                 "📸 Check out my photo folder in the Media section!",
@@ -974,7 +719,7 @@
             ],
             it: [
                 "🎵 Il mio nuovo singolo 'PEACE FOR MY MADA' è uscito! L'hai ascoltato?",
-                "🔥 Sarò live al MAD Club il 17 giugno, prendi il tuo biglietto!",
+                "🔥 Prossima tappa: Semana Cultural alle Azzorre il 15 Agosto!",
                 "👉 Non dimenticare di seguirmi su TikTok e Instagram per i dietro le quinte.",
                 "🎧 Trova tutte le mie tracce su Spotify e Apple Music.",
                 "📸 Dai un'occhiata alla mia cartella foto nella sezione Media!",
@@ -982,7 +727,7 @@
             ],
             de: [
                 "🎵 Meine neue Single 'PEACE FOR MY MADA' ist draußen! Hast du sie gehört?",
-                "🔥 Ich bin live im MAD Club am 17. Juni, sichere dir dein Ticket!",
+                "🔥 Nächster Stopp: Semana Cultural auf den Azoren am 15. August!",
                 "👉 Vergiss nicht, mir auf TikTok und Instagram für Backstage zu folgen.",
                 "🎧 Finde alle meine Tracks auf Spotify und Apple Music.",
                 "📸 Wirf einen Blick auf meinen Fotosordner im Medienbereich!",
@@ -990,7 +735,7 @@
             ],
             ln: [
                 "🎵 Single ya sika 'PEACE FOR MY MADA' euti! Oyokaki ye?",
-                "🔥 Nakozala na live na MAD Club na 17 Juin, zwa place na yo!",
+                "🔥 Rendez-vous ya liboso: Semana Cultural na Açores na 15 Août!",
                 "👉 Kobosana te ya kofollow ngai na TikTok mpe Instagram mpo na ba coulisses.",
                 "🎧 Zwa ba sons nionso na ngai na Spotify mpe Apple Music.",
                 "📸 Tala dossier photo na ngai na section Médias!",
@@ -998,7 +743,7 @@
             ],
             pt: [
                 "🎵 O meu novo single 'PEACE FOR MY MADA' saiu! Já ouviste?",
-                "🔥 Vou estar ao vivo no MAD Club a 17 de junho, compra o teu bilhete!",
+                "🔥 Próxima paragem: Semana Cultural nos Açores a 15 de Agosto!",
                 "👉 Não te esqueças de me seguir no TikTok e Instagram para os bastidores.",
                 "🎧 Encontra todas as minhas faixas no Spotify e Apple Music.",
                 "📸 Dá uma olhada na minha pasta de fotos na secção Média!",
@@ -1030,9 +775,7 @@
         let botTimerShow, botTimerHide;
         const bubble = document.getElementById('ikbot-bubble');
 
-        function startIKBot() {
-            showBotMessage();
-        }
+        function startIKBot() { showBotMessage(); }
 
         function showBotMessage() {
             bubble.textContent = botMessages[botIndex];
@@ -1058,7 +801,6 @@
             document.getElementById('galleryModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-
         function closeGalleryModal() {
             document.getElementById('galleryModal').classList.remove('active');
             document.body.style.overflow = 'auto';
@@ -1071,12 +813,9 @@
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('active');
             });
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
